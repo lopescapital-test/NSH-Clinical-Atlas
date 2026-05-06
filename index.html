@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NeuroHome · Patient Profile + Intensity Map · v0.3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-card: #f8f9fb;
+  --bg-card-hover: #f1f3f7;
+  --bg-elevated: #f0f2f6;
+  --bg-deep: #fafbfd;
+  --border: #e2e5eb;
+  --border-strong: #cdd2db;
+  --text-primary: #1a1d23;
+  --text-secondary: #5a6270;
+  --text-muted: #8891a0;
+  --accent: #0891b2;
+  --gold: #d97706;
+  --warn-bg: #fef3c7;
+  --warn-border: #fbbf24;
+  --warn-ink: #92400e;
+  --info-bg: #ecfeff;
+  --info-border: #67e8f9;
+  --info-ink: #155e75;
+  --success-bg: #ecfdf5;
+  --success-border: #6ee7b7;
+  --success-ink: #065f46;
+  /* Profile colors */
+  --prof-a: #16a34a;  /* green - pure neurodev */
+  --prof-b: #9333ea;  /* purple - complex */
+  --prof-c: #d97706;  /* gold - regressive */
+  --prof-d: #2563eb;  /* blue - mild/modal */
+  --prof-e: #ea580c;  /* orange - ABI */
+  --prof-f: #be123c;  /* rose - PANS */
+  /* Intensity colors */
+  --int-high: #dc2626;
+  --int-mid:  #0891b2;
+  --int-light: #65a30d;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text-primary); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+.topnav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+.topnav-brand { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+.topnav-brand span { color: var(--accent); }
+.topnav-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); letter-spacing: 0.02em; }
+
+.layout { display: grid; grid-template-columns: 240px 1fr; max-width: 1400px; margin: 0 auto; }
+.sidenav { position: sticky; top: 60px; height: calc(100vh - 60px); padding: 32px 20px 32px 32px; overflow-y: auto; border-right: 1px solid var(--border); }
+.sidenav-section { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin: 24px 0 8px; padding-bottom: 4px; border-bottom: 1px dashed var(--border); }
+.sidenav-section:first-child { margin-top: 0; }
+.sidenav a { display: block; padding: 6px 10px; font-size: 12.5px; color: var(--text-secondary); text-decoration: none; border-radius: 4px; transition: all 0.15s ease; }
+.sidenav a:hover { background: var(--bg-elevated); color: var(--text-primary); }
+.sidenav a.active { background: var(--bg-elevated); color: var(--accent); font-weight: 500; }
+
+main { padding: 48px 56px 96px; max-width: 1100px; }
+.section { margin-bottom: 72px; scroll-margin-top: 80px; }
+.section-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.08em; margin-bottom: 8px; text-transform: uppercase; }
+.section h1 { font-family: 'Playfair Display', serif; font-size: 44px; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 12px; }
+.section h1 .accent { color: var(--accent); font-style: italic; font-weight: 500; }
+.section h2 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 500; line-height: 1.2; margin: 36px 0 12px; }
+.section h3 { font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; margin: 20px 0 8px; }
+.section p { color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 12px; }
+.section p.lead { color: var(--text-primary); font-size: 19px; line-height: 1.55; margin-bottom: 24px; font-weight: 400; }
+.section ul, .section ol { color: var(--text-secondary); padding-left: 22px; margin-bottom: 12px; }
+.section li { margin-bottom: 4px; line-height: 1.65; }
+.section strong { color: var(--text-primary); font-weight: 600; }
+
+.cover { padding: 64px 0 48px; border-bottom: 1px solid var(--border); margin-bottom: 56px; }
+.confidential { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; background: var(--warn-bg); color: var(--warn-ink); border: 1px solid var(--warn-border); border-radius: 3px; margin-bottom: 24px; }
+.cover-mark { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.04em; }
+.cover-title { font-family: 'Playfair Display', serif; font-size: 60px; font-weight: 600; line-height: 1.05; letter-spacing: -0.025em; margin-bottom: 14px; }
+.cover-title em { color: var(--accent); font-weight: 500; }
+.cover-sub { font-size: 21px; color: var(--text-secondary); line-height: 1.5; max-width: 760px; margin-bottom: 40px; }
+.cover-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; border-top: 1px solid var(--border); padding-top: 24px; }
+.cover-meta-item { display: flex; flex-direction: column; gap: 6px; }
+.cover-meta-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+.cover-meta-value { font-size: 14px; color: var(--text-primary); font-weight: 500; }
+
+.core-idea { background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%); border: 1px solid var(--border-strong); border-radius: 8px; padding: 32px 36px; margin: 32px 0; position: relative; overflow: hidden; }
+.core-idea::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; background: var(--accent); }
+.core-idea-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+.core-idea h2 { font-family: 'Playfair Display', serif; font-size: 26px; margin: 0 0 14px; font-weight: 500; }
+.core-idea p { color: var(--text-primary); font-size: 16px; line-height: 1.6; margin-bottom: 12px; }
+.core-idea p:last-child { margin-bottom: 0; }
+
+.warn-box { background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: 6px; padding: 16px 20px; margin: 20px 0; font-size: 14px; color: var(--warn-ink); line-height: 1.55; }
+.warn-box strong { color: var(--warn-ink); }
+.info-box { background: var(--info-bg); border: 1px solid var(--info-border); border-radius: 6px; padding: 16px 20px; margin: 20px 0; font-size: 14px; color: var(--info-ink); line-height: 1.55; }
+.info-box strong { color: var(--info-ink); }
+.success-box { background: var(--success-bg); border: 1px solid var(--success-border); border-radius: 6px; padding: 16px 20px; margin: 20px 0; font-size: 14px; color: var(--success-ink); line-height: 1.55; }
+.success-box strong { color: var(--success-ink); }
+
+/* Stats */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 24px 0; }
+.stat-card { padding: 18px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+.stat-num { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 500; color: var(--accent); line-height: 1; }
+.stat-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-top: 6px; }
+.stat-desc { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+/* Profile cards */
+.profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+.profile-card {
+  padding: 24px 28px; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; position: relative;
+}
+.profile-card.A { border-top: 4px solid var(--prof-a); }
+.profile-card.B { border-top: 4px solid var(--prof-b); }
+.profile-card.C { border-top: 4px solid var(--prof-c); }
+.profile-card.D { border-top: 4px solid var(--prof-d); }
+.profile-card.E { border-top: 4px solid var(--prof-e); }
+.profile-card.F { border-top: 4px solid var(--prof-f); }
+.profile-mark { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: baseline; }
+.profile-mark .pct { font-weight: 600; }
+.profile-card.A .profile-mark .pct { color: var(--prof-a); }
+.profile-card.B .profile-mark .pct { color: var(--prof-b); }
+.profile-card.C .profile-mark .pct { color: var(--prof-c); }
+.profile-card.D .profile-mark .pct { color: var(--prof-d); }
+.profile-card.E .profile-mark .pct { color: var(--prof-e); }
+.profile-card.F .profile-mark .pct { color: var(--prof-f); }
+.profile-name { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 500; margin: 0 0 10px; }
+.profile-name em { font-style: italic; color: var(--text-secondary); }
+.profile-tagline { font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
+.profile-row { display: grid; grid-template-columns: 110px 1fr; gap: 14px; padding: 6px 0; }
+.profile-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); padding-top: 2px; }
+.profile-content { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.profile-content strong { color: var(--text-primary); }
+.profile-cohort { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+.profile-cohort strong { color: var(--text-secondary); font-weight: 600; }
+.new-badge { display: inline-block; padding: 2px 6px; background: var(--success-bg); color: var(--success-ink); border: 1px solid var(--success-border); border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-left: 8px; vertical-align: middle; }
+
+/* Intensity bands */
+.intensity-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 24px 0; }
+.intensity-card {
+  padding: 22px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+  position: relative;
+}
+.intensity-card.HIGH { border-top: 4px solid var(--int-high); }
+.intensity-card.MID { border-top: 4px solid var(--int-mid); }
+.intensity-card.LIGHT { border-top: 4px solid var(--int-light); }
+.intensity-mark { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+.intensity-card.HIGH .intensity-mark { color: var(--int-high); }
+.intensity-card.MID .intensity-mark { color: var(--int-mid); }
+.intensity-card.LIGHT .intensity-mark { color: var(--int-light); }
+.intensity-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 500; margin: 0 0 12px; }
+.intensity-budget { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.6; }
+.intensity-budget div { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px dotted var(--border); }
+.intensity-budget div:last-child { border-bottom: none; }
+.intensity-budget strong { color: var(--text-primary); font-weight: 600; }
+.intensity-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; }
+.intensity-cohort { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); }
+
+/* Matrix */
+.matrix-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+.matrix-table th, .matrix-table td { padding: 14px 16px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+.matrix-table th { background: var(--bg-elevated); font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; color: var(--text-muted); }
+.matrix-table td.profile-cell { font-weight: 600; background: var(--bg-deep); white-space: nowrap; }
+.matrix-table td.profile-cell.A { color: var(--prof-a); }
+.matrix-table td.profile-cell.B { color: var(--prof-b); }
+.matrix-table td.profile-cell.C { color: var(--prof-c); }
+.matrix-table td.profile-cell.D { color: var(--prof-d); }
+.matrix-table td.profile-cell.E { color: var(--prof-e); }
+.matrix-table td.profile-cell.F { color: var(--prof-f); }
+.matrix-cell-cases { font-size: 12px; color: var(--text-secondary); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+.matrix-cell-count { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 500; color: var(--text-primary); line-height: 1; }
+.matrix-cell-empty { font-size: 11px; color: var(--text-muted); font-style: italic; }
+.matrix-cell-tbd { font-size: 11px; color: var(--gold); font-style: italic; }
+
+/* Decision lists */
+.decision-list { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+.decision-item { padding: 14px 18px; background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 4px; font-size: 14px; color: var(--text-secondary); line-height: 1.55; }
+.decision-item strong { color: var(--text-primary); }
+.decision-item.resolved { border-left-color: var(--success-ink); background: var(--success-bg); color: var(--success-ink); }
+.decision-item.resolved strong { color: var(--success-ink); }
+
+.gap-item { padding: 14px 18px; background: var(--warn-bg); border: 1px solid var(--warn-border); border-left: 3px solid var(--gold); border-radius: 4px; font-size: 13.5px; color: var(--warn-ink); line-height: 1.55; margin-bottom: 8px; }
+.gap-item strong { color: var(--warn-ink); }
+
+/* Routing flow */
+.flow-step { display: grid; grid-template-columns: 60px 1fr; gap: 18px; padding: 18px 22px; background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 6px; margin-bottom: 10px; }
+.flow-num { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 500; color: var(--accent); line-height: 1; }
+.flow-content h4 { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 500; margin: 0 0 6px; }
+.flow-content p { margin: 0 0 6px; font-size: 13.5px; color: var(--text-secondary); }
+.flow-content ul { padding-left: 18px; margin: 4px 0 0; }
+.flow-content li { font-size: 13px; color: var(--text-secondary); margin-bottom: 2px; }
+
+/* Signature element cards (new in v0.3) */
+.sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 24px 0; }
+.sig-card { padding: 20px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; border-left: 3px solid var(--accent); }
+.sig-card-mark { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.sig-card-name { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 500; margin: 0 0 10px; }
+.sig-card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.55; margin-bottom: 10px; }
+.sig-card-cases { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); padding-top: 10px; border-top: 1px dashed var(--border); }
+.sig-card-cases strong { color: var(--text-secondary); font-weight: 600; }
+
+/* Longitudinal pair callouts (new in v0.3) */
+.longi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+.longi-card { padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; }
+.longi-name { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px; }
+.longi-pair { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+.longi-prof { display: inline-block; padding: 2px 6px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; }
+.longi-delta { font-size: 12.5px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+/* Cohort growth callout */
+.growth-callout { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: center; padding: 28px 32px; background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%); border: 1px solid var(--border-strong); border-radius: 10px; margin: 24px 0; }
+.growth-callout-side { text-align: center; }
+.growth-callout-num { font-family: 'Playfair Display', serif; font-size: 56px; font-weight: 500; line-height: 1; color: var(--text-primary); }
+.growth-callout-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-top: 6px; }
+.growth-callout-arrow { font-size: 28px; color: var(--accent); font-weight: 500; }
+.growth-callout-side.now .growth-callout-num { color: var(--accent); }
+
+@media (max-width: 980px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidenav { display: none; }
+  main { padding: 32px 20px 64px; }
+  .cover-title { font-size: 40px; }
+  .cover-meta, .stats-grid, .profile-grid, .intensity-grid, .sig-grid, .longi-grid { grid-template-columns: 1fr 1fr; }
+  .growth-callout { grid-template-columns: 1fr; gap: 12px; }
+}
+@media print {
+  .topnav, .sidenav { display: none; }
+  .layout { grid-template-columns: 1fr; }
+  main { padding: 0; max-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-brand">Neuro<span>Home</span></div>
+  <div class="topnav-meta">Patient Profile + Intensity Map · Internal · v0.3 (Updated May 6)</div>
+</nav>
+
+<div class="layout">
+
+<aside class="sidenav">
+  <div class="sidenav-section">Foundation</div>
+  <a href="#cover">Cover</a>
+  <a href="#whats-new">What's New in v0.3</a>
+  <a href="#core-idea">The Core Idea</a>
+
+  <div class="sidenav-section">Method</div>
+  <a href="#methodology">Methodology &amp; Caveats</a>
+
+  <div class="sidenav-section">The Two Dimensions</div>
+  <a href="#profiles">The 6 Clinical Profiles</a>
+  <a href="#intensity">The 3 Intensity Bands</a>
+
+  <div class="sidenav-section">The Cross-cut</div>
+  <a href="#matrix">Profile × Intensity Matrix</a>
+
+  <div class="sidenav-section">Patterns</div>
+  <a href="#signatures">Protocol Signature Elements</a>
+  <a href="#longitudinal">Continuing Care Signals</a>
+
+  <div class="sidenav-section">Operations</div>
+  <a href="#routing">Discovery Call Routing</a>
+  <a href="#edge-cases">Edge Cases / MD Queue</a>
+
+  <div class="sidenav-section">Reference</div>
+  <a href="#open-questions">Open Questions for Kyle</a>
+  <a href="#appendix">Sources &amp; Appendix</a>
+</aside>
+
+<main>
+
+<section class="cover" id="cover">
+  <div class="confidential">Internal · Pediatric Pilot · For Team Eyes Only</div>
+  <div class="cover-mark">Patient Profile + Intensity Map · v0.3 (Updated May 6)</div>
+  <h1 class="cover-title">Profile is what.<br><em>Intensity is how much.</em></h1>
+  <p class="cover-sub">An empirical framework now derived from <strong>41 pediatric homecare prescriptions</strong>. Profiles E (Acquired Brain Injury) and F (PANS/PANDAS) — placeholders in v0.2 — are now populated with real cases and clear empirical signatures. <strong>All six profiles in the framework can be backed by at least one cohort case.</strong> No more TBD cells.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="cover-meta-label">Document</span><span class="cover-meta-value">Patient Profile + Intensity Map</span></div>
+    <div class="cover-meta-item"><span class="cover-meta-label">Audience</span><span class="cover-meta-value">Dr. Kyle · Clinical · GHL · V2 Hub</span></div>
+    <div class="cover-meta-item"><span class="cover-meta-label">Cohort</span><span class="cover-meta-value">41 pediatric cases (was 23)</span></div>
+    <div class="cover-meta-item"><span class="cover-meta-label">Companions</span><span class="cover-meta-value">Kit Composition v0.3 · Pricing v1.1</span></div>
+  </div>
+</section>
+
+<section class="section" id="whats-new">
+  <div class="section-tag">§0 · Changelog</div>
+  <h1>What changed since v0.2</h1>
+  <p class="lead">Three weeks of clinical data adds and one round of Dr. Kyle classification have moved the framework from a 23-case hypothesis with two empty cells into a 41-case empirical framework with all six profiles populated.</p>
+
+  <div class="growth-callout">
+    <div class="growth-callout-side"><div class="growth-callout-num">23</div><div class="growth-callout-label">v0.2 cohort</div></div>
+    <div class="growth-callout-arrow">→</div>
+    <div class="growth-callout-side now"><div class="growth-callout-num">41</div><div class="growth-callout-label">v0.3 cohort · +78%</div></div>
+  </div>
+
+  <h3>Major changes</h3>
+  <ul>
+    <li><strong>Profile E (Acquired Brain Injury) populated.</strong> 4 patients, 9 files. Briar, Dana, Hana, Lily — all classified by Dr. Kyle as ABI. Two longitudinal pairs in this profile (Briar Aug 2023 → April 2025 is the <em>longest</em> time horizon in the entire cohort).</li>
+    <li><strong>Profile F (PANS/PANDAS) populated.</strong> 5 patients, 6 files. Ellis, Lachie (initial + update), Michael L, Michael S, Rhett. Most clinically distinctive prescription signature in the framework — basal ganglia / D2 receptor targeting, multi-phase dietary reset, Dr. Jared Siegler co-management.</li>
+    <li><strong>Profile B sharpened with 3 new cases.</strong> Alexander Gabriel, Anaya (both Dubai cases co-managed with Dr. Manteghi), and Daryan have crystallized the Profile B signature: qEEG-driven cortical targeting at named EEG sites, biomedical co-management, anti-inflammatory hybrid diets, multi-hemisphere work, vibration-speech pairing.</li>
+    <li><strong>New section: Protocol Signature Elements.</strong> Recurring sub-protocols that cut across profiles — vibration-speech pairing matrix, qEEG-driven brainwave enhancement, anti-inflammatory hybrid diet, multi-phase structure with detox stack — now formalized as building blocks rather than profile-specific features.</li>
+    <li><strong>New section: Continuing Care Signals.</strong> Five longitudinal pairs across profiles A, E, and F give us the first empirical look at how protocols evolve over time. Out of scope for V1 prescription; will become foundation of post-week-12 framework.</li>
+  </ul>
+
+  <h3>What stays from v0.2</h3>
+  <ul>
+    <li>The two-dimension framing (Profile × Intensity) is unchanged and validated by the larger cohort.</li>
+    <li>Profile A, C, D card definitions are unchanged — the new cases fit the existing definitions cleanly.</li>
+    <li>The 3 intensity bands (HIGH/MID/LIGHT) and their structural definitions are unchanged.</li>
+    <li>The Discovery Call routing logic is intact — extended to handle Profiles E and F.</li>
+  </ul>
+
+  <h3>What's still open</h3>
+  <ul>
+    <li><strong>Profile B vs Profile F boundary.</strong> Daryan's prescription signature (Dr. Jared co-mgmt, AIP/Paleo/Carnivore/Low-Histamine, qEEG-driven, 419 lines) is closer to Profile F than Profile B. Pending Dr. Kyle's diagnostic confirmation.</li>
+    <li><strong>Pediatric vs adult ABI scope.</strong> Profile E currently has 4 pediatric cases, but Dr. Kyle's clinic also treats adult ABI. V1 needs to decide whether Profile E is pediatric-only or includes an adult parallel track.</li>
+    <li><strong>Two cases pending classification:</strong> Jimmy W (likely Profile A or C with biomedical layer), Sysha (likely D).</li>
+    <li><strong>Severity Level 3 / non-verbal still not reliably captured</strong> — same caveat as v0.2.</li>
+  </ul>
+</section>
+
+<section class="section" id="core-idea">
+  <div class="section-tag">§1 · The Core Idea</div>
+  <div class="core-idea">
+    <div class="core-idea-label">The two-dimension framing</div>
+    <h2>The protocol has two independent axes.</h2>
+    <p><strong>Profile</strong> answers <em>what kind of case is this?</em> — driven by the child's clinical presentation. Reflex burden, biomedical drivers, hemisphericity, regression history, immune-mediated activity, structural insult. Profile is durable: it changes only as a child fundamentally changes.</p>
+    <p><strong>Intensity</strong> answers <em>how much daily protocol does this case need, and can the family execute it?</em> — driven by clinical demand AND family bandwidth. Intensity is tunable: a child can move HIGH → MID as they advance, or MID → HIGH if the clinician needs to push harder.</p>
+    <p>These are independent. A complex Profile B child can run on MID intensity if the family can't sustain HIGH. A modal Profile D child can occasionally run HIGH if the clinician is pushing a specific advancement window. Treating profile and intensity as a single combined "level" loses this flexibility — and loses what Dr. Kyle does intuitively when he prescribes.</p>
+    <p><strong>Update v0.3:</strong> Profiles E and F — added by Dr. Kyle in May 2 review and pending data — are now empirically populated. The framework's six-cell structure is fully justified by the cohort. <em>Every profile now has at least one real case backing it.</em></p>
+  </div>
+
+  <h2>What this unlocks</h2>
+  <p><strong>For the Discovery Call:</strong> concierge captures observable signals and triages a family into one of 6 profiles. Edge cases (complex Profile B, ambiguous presentations, suspected PANS flares) get flagged for MD-led intake.</p>
+  <p><strong>For the prescription:</strong> profile determines the <em>contents</em> of the protocol (which exercises, which devices, which biomedical workups). Intensity determines the <em>dosing</em> (how many minutes daily, how many exercises, how many reps).</p>
+  <p><strong>For the tier mapping:</strong> support tier (Foundation / Accelerated / Immersive) is the third dimension — independent of both — that the family chooses based on their need for clinician scaffolding around the prescribed protocol.</p>
+</section>
+
+<section class="section" id="methodology">
+  <div class="section-tag">§2 · Method</div>
+  <h1>Methodology and caveats</h1>
+  <p class="lead">v0.3 is built from 41 pediatric homecare prescriptions plus diagnostic classification provided by Dr. Kyle through file-folder organization (PANDAS folder, ABI folder). Read the caveats — three of v0.2's are now resolved or refined; two new ones replace them.</p>
+
+  <h2>What I did for v0.3</h2>
+  <ol>
+    <li>Inherited all 23 prescriptions from v0.2 with their existing classifications</li>
+    <li>Added 18 new patient files across multiple data adds (October–November 2025 cohort, Croatia/older case backfills, Home Care folder consolidation)</li>
+    <li>Used Dr. Kyle's <strong>folder organization as ground truth</strong> for diagnosis: files in the PANDAS folder are Profile F; files in the ABI folder are Profile E. This is more reliable than inferring profile from prescription pattern alone — as we discovered when Ellis was prescription-typed as Profile A/B but folder-typed as Profile F.</li>
+    <li>Re-read Profile F cases for the empirical signature (basal ganglia targeting, multi-phase structure, etc.) once we knew they were PANS</li>
+    <li>Identified recurring sub-protocols that cross profile boundaries — these are now formalized as Protocol Signature Elements (§6)</li>
+    <li>Identified longitudinal pairs (5 across the cohort) for the first empirical look at Continuing Care patterns (§7)</li>
+    <li>Removed Abhishek from the operational cohort (90% subset of Abdulrahman, no analytical signal); pending project-side cleanup</li>
+  </ol>
+
+  <h2>Caveats — what's resolved, what remains</h2>
+
+  <div class="success-box">
+    <strong>Caveat 1 (v0.2) RESOLVED:</strong> "23 cases is a small sample." 41 cases is larger and better-distributed. The 91% RB-weak finding from v0.2 has held up — even with the new cases, RB-weak remains the modal presentation. Profile F cases (PANS/PANDAS) are the notable exception with explicit basal ganglia / contralateral targeting patterns that don't reduce to the RB-weak default.
+  </div>
+
+  <div class="warn-box">
+    <strong>Caveat 2 (v0.2) STILL APPLIES:</strong> "I cannot replicate looking at them." Even with 41 cases, profiles are still defined by what Dr. Kyle prescribed, working backward toward patient signals. The diagnostic ground truth has improved (Dr. Kyle's folder organization for E and F), but the observable-signal-to-profile mapping for A/B/C/D still needs his explicit confirmation.
+  </div>
+
+  <div class="warn-box">
+    <strong>Caveat 3 (v0.2) STILL APPLIES:</strong> "I cannot reliably separate prescription from execution." Without session notes, LIGHT-intensity cases may reflect genuine clinical fit OR family bandwidth limits.
+  </div>
+
+  <div class="warn-box">
+    <strong>Caveat 4 (NEW):</strong> Profile B and Profile F may overlap clinically more than the framework suggests. They share qEEG-driven targeting, Dr. Jared co-management, anti-inflammatory hybrid diets, and bilateral hemisphere work. Distinguishing features (basal ganglia/D2 explicit framing, multi-phase dietary reset, mycotoxin emphasis, flare protocols) are present in Profile F but absent or muted in Profile B. <em>Daryan is the boundary case</em> — currently classified Profile B based on prescription pattern alone.
+  </div>
+
+  <div class="warn-box">
+    <strong>Caveat 5 (NEW):</strong> Profile E (ABI) is currently pediatric-only based on the 4-patient cohort. Dr. Kyle treats adult ABI in his broader practice (the Neurological Rehab consultation transcripts confirm this). V1 scope decision pending: pediatric-only vs. adult parallel track.
+  </div>
+
+  <h2>What this needs from Dr. Kyle</h2>
+  <ul>
+    <li>Confirm Daryan's classification (Profile B or Profile F)</li>
+    <li>Confirm Jimmy W and Sysha classifications</li>
+    <li>Confirm the empirical Profile F signature matches his clinical mental model — particularly the basal ganglia/D2 framing and the multi-phase dietary reset → detox → ESM structure</li>
+    <li>Confirm V1 scope on Profile E (pediatric-only or include adult)</li>
+    <li>Sign off on the Protocol Signature Elements as recurring building blocks usable in V1 prescription generation</li>
+  </ul>
+</section>
+
+<section class="section" id="profiles">
+  <div class="section-tag">§3 · The First Dimension</div>
+  <h1>The clinical profiles <span class="accent">— all 6 now populated</span></h1>
+  <p class="lead">9 Profile A · 6 Profile B · 4 Profile C · 11 Profile D · 4 Profile E · 5 Profile F · 2 pending classification. Each profile defines what the protocol contains — which exercises, which devices, which biomedical work.</p>
+
+  <div class="profile-grid">
+
+    <div class="profile-card A">
+      <div class="profile-mark"><span>Profile A</span><span class="pct">9 patients · 22%</span></div>
+      <div class="profile-name">Pure Neurodevelopmental</div>
+      <div class="profile-tagline">Heavy retained primitive reflexes, low biomedical burden. The "classic" pediatric ASD presentation Kyle is best known for treating. Largely unchanged from v0.2 — new cases fit cleanly.</div>
+      <div class="profile-row"><div class="profile-label">Observable</div><div class="profile-content">Retained Moro/ATNR/STNR readily testable. Clear motor signs — postural asymmetry, primitive-pattern movement, often hypotonic trunk. Right-brain weakness signals strong (left-side body weakness, social/sensory features).</div></div>
+      <div class="profile-row"><div class="profile-label">Biomedical</div><div class="profile-content">Diet, gut, mold, vitamins look reasonable. No significant inflammatory drivers. Minimal supplement protocol needed. Some new cases (Abdulrahman) layer in anti-inflammatory nutrition with Arabic translations.</div></div>
+      <div class="profile-row"><div class="profile-label">Starting Stage</div><div class="profile-content">Stage 2 (Primitive Reflex Integration) is the dominant stage. Stage 1 cranial nerve work runs parallel as activator.</div></div>
+      <div class="profile-row"><div class="profile-label">Kit Emphasis</div><div class="profile-content">Heavy use of laser cerebellar work, vibration for reflex integration, SaeboStim for sensory layer. Modest biomedical kit. Sasha case adds explicit Broca's/Wernicke's targeting.</div></div>
+      <div class="profile-row"><div class="profile-label">Progression</div><div class="profile-content">Linear bottom-up. Each reflex gets its protocol; advance as each clears. Typical 12-week trajectory hits Stage 2 → 4 cleanly.</div></div>
+      <div class="profile-row"><div class="profile-label">Intensity</div><div class="profile-content">Splits HIGH and MID. The reflex work alone earns at least mid-intensity dosing — never LIGHT.</div></div>
+      <div class="profile-cohort"><strong>Cohort cases:</strong> Averie, Beau, Petar, Rafeeah ×2, Vid <span class="new-badge">+ NEW</span> Abdulrahman, Sasha, Duru (seizure stabilization variant), Zorwara (oldest case · Jan 2023)</div>
+    </div>
+
+    <div class="profile-card B">
+      <div class="profile-mark"><span>Profile B</span><span class="pct">6 patients · 15%</span></div>
+      <div class="profile-name">Complex Multi-Pathway <em>(sharpened)</em></div>
+      <div class="profile-tagline">Heavy reflex burden AND high biomedical burden. Now defined more sharply: <strong>qEEG-driven cortical targeting + multi-hemisphere work + biomedical co-management + speech subprotocol</strong>. The 15% Kyle has to think about.</div>
+      <div class="profile-row"><div class="profile-label">Observable</div><div class="profile-content">Multiple retained reflexes. Visible inflammation signs (skin, dark circles, poor color). Dysregulated state. May have GI issues, mold exposure history, food sensitivity flags. New: cases often arrive with prior qEEG report — the qEEG drives prescription, not the other way around.</div></div>
+      <div class="profile-row"><div class="profile-label">Biomedical</div><div class="profile-content">Multiple flags — gut, detox, food sensitivity, supplements all in play. Comprehensive lab workup required. Anti-inflammatory hybrid diet (AIP/Paleo/Carnivore/Low-Histamine) common. Dr. Jared-led biomedical pathway alongside neurological.</div></div>
+      <div class="profile-row"><div class="profile-label">Starting Stage</div><div class="profile-content">Stage 1 + Stage 2 layered. Often slower start — biomedical stabilization may need to happen before intensive Stage 2 work tolerable.</div></div>
+      <div class="profile-row"><div class="profile-label">Kit Emphasis</div><div class="profile-content">Full kit deployment + qEEG-targeted laser placements at named EEG sites (F3/F4, T3/T4, P3/P4). Bilateral cortical work — not the right-side-only focus of Profile A. Often add-ons (Stimpod, additional laser settings). Vibration-Speech Pairing matrix common.</div></div>
+      <div class="profile-row"><div class="profile-label">Progression</div><div class="profile-content">Non-linear. Biomedical and neurological pathways parallel; setbacks from gut/detox flares are common. Longer time at lower stages expected.</div></div>
+      <div class="profile-row"><div class="profile-label">Intensity</div><div class="profile-content">Skews MID-to-HIGH. New cases (Alexander, Anaya) anchor MID; Daryan and Matteo K anchor HIGH.</div></div>
+      <div class="profile-cohort"><strong>Cohort cases:</strong> Elliot, Matteo K, Maya S <span class="new-badge">+ NEW</span> Alexander Gabriel (Dubai/Manteghi co-mgmt), Anaya (Dubai/Manteghi, speech-focused), Ted (updated Nov 2025) · <em>Daryan pending classification (likely B or F)</em></div>
+    </div>
+
+    <div class="profile-card C">
+      <div class="profile-mark"><span>Profile C</span><span class="pct">4 patients · 10%</span></div>
+      <div class="profile-name">Regressive — Mold-Led</div>
+      <div class="profile-tagline">Light retained reflex burden but high biomedical drivers — most often <strong>mold exposure</strong> per Dr. Kyle's May 2 review. Kids who developed typically then regressed after environmental insult. Unchanged from v0.2 — no new cases this round.</div>
+      <div class="profile-row"><div class="profile-label">Observable</div><div class="profile-content">Reflexes integrate or test as borderline. Inflammation signs prominent — skin, GI symptoms, behavioral dysregulation. Onset history correlates with environmental change (water damage, new home, mold exposure). PANS/PANDAS now <strong>routes to Profile F</strong>, not here.</div></div>
+      <div class="profile-row"><div class="profile-label">Biomedical</div><div class="profile-content">Heavy emphasis. GI-MAP, mycotoxin panel, methylation, food sensitivity. Diet protocol assigned. Supplement stack significant.</div></div>
+      <div class="profile-row"><div class="profile-label">Starting Stage</div><div class="profile-content">Stage 1 (cranial nerves, vagal regulation) primary. Brief Stage 2 work for any retained reflexes. Most lift comes from biomedical correction.</div></div>
+      <div class="profile-row"><div class="profile-label">Kit Emphasis</div><div class="profile-content">Vagus stimulation, photobiomodulation for inflammation, lighter primitive-reflex work. Diet + supplements heavy.</div></div>
+      <div class="profile-row"><div class="profile-label">Progression</div><div class="profile-content">Biomedically gated. Neurological work plateaus until inflammation drops. Once gut/detox stabilizes, often rapid stage progression.</div></div>
+      <div class="profile-row"><div class="profile-label">Intensity</div><div class="profile-content">Skews MID (3 of 4). Jeremiah is LIGHT — possibly biomedical work happening offline (diet/supplements) without adding to daily exercise burden.</div></div>
+      <div class="profile-cohort"><strong>Cohort cases:</strong> Ameer, Jeremiah, Nektarije, Shivay · <em>Jimmy W pending classification (likely C with biomedical layer)</em></div>
+    </div>
+
+    <div class="profile-card D">
+      <div class="profile-mark"><span>Profile D</span><span class="pct">11 patients · 27%</span></div>
+      <div class="profile-name">Mild / Hemispheric</div>
+      <div class="profile-tagline">The modal NeuroHome family. Light reflex burden, low biomedical issues. Focus is hemispheric balance, vestibular, sensory regulation. Definitions unchanged; Sysha added.</div>
+      <div class="profile-row"><div class="profile-label">Observable</div><div class="profile-content">Most reflexes integrated or near it. Specific weaknesses (often vestibular, eye tracking, fine motor, dominance unclear). Verbal in most cases. Right-brain signals still present but milder.</div></div>
+      <div class="profile-row"><div class="profile-label">Biomedical</div><div class="profile-content">Standard Paleo or whole-foods orientation. Maybe one supplement focus. No major detox or gut intervention indicated.</div></div>
+      <div class="profile-row"><div class="profile-label">Starting Stage</div><div class="profile-content">Often starts at Stage 3 or 4 directly — gross motor, dominance, cross-lateral coordination. May skip elaborate Stage 2 work.</div></div>
+      <div class="profile-row"><div class="profile-label">Kit Emphasis</div><div class="profile-content">Lighter device count. Strong sensory protocol (oils, glasses, music, OptoDrum). Less laser/vibration intensity.</div></div>
+      <div class="profile-row"><div class="profile-label">Progression</div><div class="profile-content">Often the fastest progressors. Can hit Stage 5-6 work in 6-8 weeks. May graduate to Continuing Care subscription rather than extending intensive.</div></div>
+      <div class="profile-row"><div class="profile-label">Intensity</div><div class="profile-content">Splits MID and LIGHT. Never HIGH — the milder profile doesn't need that intensity.</div></div>
+      <div class="profile-cohort"><strong>Cohort cases:</strong> Aisha (incl. update), Ema, Grayson, Grga, Jakov, Mara, Marin, Sofija, Tin B, Zita <span class="new-badge">+ NEW</span> Sysha</div>
+    </div>
+
+    <div class="profile-card E">
+      <div class="profile-mark"><span>Profile E</span><span class="pct">4 patients · 10%</span></div>
+      <div class="profile-name">Acquired Brain Injury <em>(now populated)</em></div>
+      <div class="profile-tagline">Kids with structural brain insult — known or undetected — producing focal underdevelopment. Birth trauma, hypoxic events, undiagnosed concussion. <strong>Treatment is regional rebuilding rather than full developmental progression</strong>. Two longitudinal pairs make this the best-instrumented profile for tracking change over time.</div>
+      <div class="profile-row"><div class="profile-label">Observable</div><div class="profile-content">Focal deficits matching specific brain regions rather than diffuse developmental delay. Insult history may exist (difficult birth, NICU stay, head trauma) — or may not. qEEG localizes underactive regions.</div></div>
+      <div class="profile-row"><div class="profile-label">Biomedical</div><div class="profile-content">Universal Stool + OAT. Full panel only if specifically indicated — the biomedical burden is less than Profile B/C/F.</div></div>
+      <div class="profile-row"><div class="profile-label">Starting Stage</div><div class="profile-content">Stage assignment depends on which functions are affected. Targeted regional work rather than bottom-up. qEEG findings drive prescription.</div></div>
+      <div class="profile-row"><div class="profile-label">Kit Emphasis</div><div class="profile-content">Targeted laser placements per identified regions. <strong>Distinctive instrument: separate "milestones to achieve" goals doc</strong> alongside the prescription (Hana, Lily). Progress is measured against pre-injury baseline rather than developmental norms — different from Profiles A/D where milestones are developmental.</div></div>
+      <div class="profile-row"><div class="profile-label">Progression</div><div class="profile-content">Variable — depends on injury type and recovery trajectory. May be more stepwise than linear. <strong>Long time horizons</strong> — Briar's 20-month longitudinal pair is the longest in the cohort.</div></div>
+      <div class="profile-row"><div class="profile-label">Intensity</div><div class="profile-content">Empirically MID-skewed. None of the 4 cases run HIGH; Hana's protocol is the heaviest.</div></div>
+      <div class="profile-cohort"><strong>Cohort cases:</strong> <span class="new-badge">NEW</span> Briar (Aug 2023 + April 2025 — 20-month pair), Dana (Aug 2023 + April 2024 — 8-month pair), Hana Grah (initial + checklist + milestones), Lily (Oct 2025 update + milestones)</div>
+    </div>
+
+    <div class="profile-card F">
+      <div class="profile-mark"><span>Profile F</span><span class="pct">5 patients · 12%</span></div>
+      <div class="profile-name">PANS / PANDAS <em>(now populated)</em></div>
+      <div class="profile-tagline">Immune-mediated. Sudden-onset OCD, tics, behavioral regression following infection or trigger. <strong>The most clinically distinctive prescription signature in the entire framework</strong> — basal ganglia / D2 receptor explicit targeting, multi-phase structure, Dr. Jared Siegler co-management.</div>
+      <div class="profile-row"><div class="profile-label">Observable</div><div class="profile-content">Sudden onset (often dramatic). OCD, tics, behavioral regression. Strep / Lyme / viral history common. May overlap with autism but PANS is the dominant active driver. Per Michael L's prescription: <em>"Severe PANS/PANDAS + Mycotoxin Burden + Gut-Brain Inflammation + D2 Receptor Hypofunction"</em> — the clearest diagnostic frame in any prescription.</div></div>
+      <div class="profile-row"><div class="profile-label">Biomedical</div><div class="profile-content">Full panel + immune-specific workup. Antimicrobial / antibiotic protocol via Dr. Jared Siegler. <strong>Strict Carnivore-Paleo dietary reset (14 days)</strong> in heavier cases. Mycotoxin / mold environmental remediation (air purifiers, humidity control). Adamax nasal peptide.</div></div>
+      <div class="profile-row"><div class="profile-label">Starting Stage</div><div class="profile-content"><strong>Multi-phase structure unique to this profile:</strong> Phase 1 — strict dietary reset; Phase 2 — detox &amp; immune support; Phase 3 — NeuroSolution ESM Homecare. No other profile has explicit phasing like this.</div></div>
+      <div class="profile-row"><div class="profile-label">Kit Emphasis</div><div class="profile-content">Distinctive vs other profiles: <strong>basal ganglia / midbrain explicit targeting</strong> ("right basal ganglia activation/modulation/inhibition"). <strong>Detox stack</strong> — sauna + cryotherapy (right-side, contralateral) + rebounder for lymph. <strong>PEMF (NeoRhythm)</strong> + <strong>Fisher Wallace cranial e-stim</strong>. Bilateral cortical work, often left-frontal weakness focus (atypical vs autism's right-brain-weak default).</div></div>
+      <div class="profile-row"><div class="profile-label">Progression</div><div class="profile-content">Acute flare → maintenance pattern. Often non-linear with flares. <strong>"Rapid Regulation Protocol for Stimming &amp; Outbursts"</strong> as explicit flare-management module (Ellis case). Can transition into Profile B/C/D once acute phase resolves.</div></div>
+      <div class="profile-row"><div class="profile-label">Intensity</div><div class="profile-content">Severity gradient: Michael L (severe — full 3-phase reset) → Lachie (moderate-high) → Rhett, Michael S (moderate) → Ellis (lighter, DBX-tier with flare module). MID modal with explicit deload pathway during acute flares.</div></div>
+      <div class="profile-cohort"><strong>Cohort cases:</strong> <span class="new-badge">NEW</span> Ellis (lighter), Lachie (initial + update — longitudinal pair), Michael L (severe exemplar), Michael S, Rhett</div>
+    </div>
+
+  </div>
+</section>
+
+<section class="section" id="intensity">
+  <div class="section-tag">§4 · The Second Dimension</div>
+  <h1>The 3 intensity bands</h1>
+  <p class="lead">Intensity definitions unchanged from v0.2. The expanded cohort confirms the band structure — 5 HIGH · 14 MID · 4 LIGHT in the original 23-case sample held up; new cases distribute across all three bands consistent with prior patterns. Independent of profile — a Profile B child can run MID, a Profile D child can run LIGHT or MID.</p>
+
+  <div class="intensity-grid">
+
+    <div class="intensity-card HIGH">
+      <div class="intensity-mark">HIGH Intensity</div>
+      <div class="intensity-name">HIGH</div>
+      <div class="intensity-budget"><div><span>Daily commitment</span><strong>60–90 min</strong></div><div><span>Distinct exercises</span><strong>15–22</strong></div><div><span>Devices deployed</span><strong>9–12</strong></div><div><span>Rep prescriptions</span><strong>25–48</strong></div><div><span>Daily blocks</span><strong>3–4 (full)</strong></div></div>
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px;line-height:1.55"><strong style="color:var(--text-primary)">What it is:</strong> The most demanding home protocol. Multiple device stack, many exercises, frequent re-application throughout the day. Family must be highly motivated and structured.</p>
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px;line-height:1.55"><strong style="color:var(--text-primary)">Best fit:</strong> Profile B (complex), heavier Profile A (deep reflex work), severe Profile F (Michael L exemplar). Children whose presentations need full bottom-up rebuild or full multi-pathway work.</p>
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0;line-height:1.55"><strong style="color:var(--text-primary)">Risk:</strong> Adherence risk: families fail HIGH intensity if life events disrupt routine. Concierge needs to monitor closely.</p>
+      <div class="intensity-cohort">Original 5 (Matteo K, Elliot, Rafeeah-initial, Averie, Vid) + new HIGH cases including Daryan, Michael L, Abdulrahman</div>
+    </div>
+
+    <div class="intensity-card MID">
+      <div class="intensity-mark">MID Intensity · modal</div>
+      <div class="intensity-name">MID</div>
+      <div class="intensity-budget"><div><span>Daily commitment</span><strong>40–60 min</strong></div><div><span>Distinct exercises</span><strong>10–15</strong></div><div><span>Devices deployed</span><strong>7–11</strong></div><div><span>Rep prescriptions</span><strong>15–25</strong></div><div><span>Daily blocks</span><strong>3 (morning/active/evening)</strong></div></div>
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px;line-height:1.55"><strong style="color:var(--text-primary)">What it is:</strong> The modal NeuroHome prescription. Comprehensive but executable in a normal family routine. Standard four-block daily structure.</p>
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px;line-height:1.55"><strong style="color:var(--text-primary)">Best fit:</strong> The default starting point. Fits the majority of presentations across profiles A through F. Profile A on maintenance, Profile C in active treatment, most Profile D children, all Profile E cases, moderate Profile F cases.</p>
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0;line-height:1.55"><strong style="color:var(--text-primary)">Risk:</strong> Sustainable for most families. The sweet spot.</p>
+      <div class="intensity-cohort">Modal across all 6 profiles. Briar/Dana/Hana/Lily (E) all MID; Lachie/Michael S/Rhett (F) MID; Alexander/Anaya (B) MID</div>
+    </div>
+
+    <div class="intensity-card LIGHT">
+      <div class="intensity-mark">LIGHT Intensity</div>
+      <div class="intensity-name">LIGHT</div>
+      <div class="intensity-budget"><div><span>Daily commitment</span><strong>20–35 min</strong></div><div><span>Distinct exercises</span><strong>4–8</strong></div><div><span>Devices deployed</span><strong>6–8</strong></div><div><span>Rep prescriptions</span><strong>7–16</strong></div><div><span>Daily blocks</span><strong>1–2</strong></div></div>
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px;line-height:1.55"><strong style="color:var(--text-primary)">What it is:</strong> Streamlined protocol. Often used for milder presentations OR for families demonstrably unable to sustain higher intensity. The pacing is right for the case, not a compromise.</p>
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px;line-height:1.55"><strong style="color:var(--text-primary)">Best fit:</strong> Mild Profile D children. Profile C cases where biomedical work is the main lift. Maintenance/transition phases.</p>
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0;line-height:1.55"><strong style="color:var(--text-primary)">Risk:</strong> Less risk of burnout. Risk is under-dosing — clinician must validate that the lighter protocol is actually clinically appropriate, not just a concession to family bandwidth.</p>
+      <div class="intensity-cohort">Original 4 (Aisha, Ema, Jakov, Jeremiah) + Ellis (DBX-tier Profile F)</div>
+    </div>
+
+  </div>
+
+  <h2>How intensity differs from support tier</h2>
+  <p>Intensity (LIGHT/MID/HIGH) is a <strong>clinical prescription</strong> — Dr. Kyle decides how much daily protocol the case needs. Support tier (Foundation/Accelerated/Immersive) is a <strong>family choice</strong> — how much clinician scaffolding they want around that prescription.</p>
+  <p>This is why the existing tier model in v0.5 works cleanly. The "personalized" piece happens through profile + intensity + BRB laterality. The "tiered support" piece is independent of all three.</p>
+</section>
+
+<section class="section" id="matrix">
+  <div class="section-tag">§5 · The Cross-cut</div>
+  <h1>Profile × Intensity matrix</h1>
+  <p class="lead">All 41 cohort cases mapped onto the matrix. Profiles E and F now populated — no more TBD rows. The empty cells continue to matter: they tell you which combinations don't naturally occur and why.</p>
+
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>HIGH Intensity</th>
+        <th>MID Intensity</th>
+        <th>LIGHT Intensity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="profile-cell A">Profile A<br><span style="font-weight:400;font-size:11px;color:var(--text-muted)">Pure neurodev</span></td>
+        <td><div class="matrix-cell-count">4</div><div class="matrix-cell-cases">Averie, Rafeeah, Vid, Abdulrahman</div></td>
+        <td><div class="matrix-cell-count">5</div><div class="matrix-cell-cases">Beau, Petar, Rafeeah-upd, Sasha, Duru, Zorwara</div></td>
+        <td><div class="matrix-cell-empty">No cases</div></td>
+      </tr>
+      <tr>
+        <td class="profile-cell B">Profile B<br><span style="font-weight:400;font-size:11px;color:var(--text-muted)">Complex multi-pathway</span></td>
+        <td><div class="matrix-cell-count">3</div><div class="matrix-cell-cases">Elliot, Matteo, Daryan*</div></td>
+        <td><div class="matrix-cell-count">3</div><div class="matrix-cell-cases">Maya, Alexander, Anaya, Ted-upd</div></td>
+        <td><div class="matrix-cell-empty">No cases</div></td>
+      </tr>
+      <tr>
+        <td class="profile-cell C">Profile C<br><span style="font-weight:400;font-size:11px;color:var(--text-muted)">Regressive / mold-led</span></td>
+        <td><div class="matrix-cell-empty">No cases</div></td>
+        <td><div class="matrix-cell-count">3</div><div class="matrix-cell-cases">Ameer, Nektarije, Shivay</div></td>
+        <td><div class="matrix-cell-count">1</div><div class="matrix-cell-cases">Jeremiah</div></td>
+      </tr>
+      <tr>
+        <td class="profile-cell D">Profile D<br><span style="font-weight:400;font-size:11px;color:var(--text-muted)">Mild / hemispheric</span></td>
+        <td><div class="matrix-cell-empty">No cases</div></td>
+        <td><div class="matrix-cell-count">8</div><div class="matrix-cell-cases">Grayson, Grga, Mara, Marin, Sofija, Tin, Zita, Sysha</div></td>
+        <td><div class="matrix-cell-count">3</div><div class="matrix-cell-cases">Aisha, Ema, Jakov</div></td>
+      </tr>
+      <tr>
+        <td class="profile-cell E">Profile E<br><span style="font-weight:400;font-size:11px;color:var(--text-muted)">Acquired brain injury</span></td>
+        <td><div class="matrix-cell-empty">No cases</div></td>
+        <td><div class="matrix-cell-count">4</div><div class="matrix-cell-cases">Briar, Dana, Hana, Lily</div></td>
+        <td><div class="matrix-cell-empty">No cases</div></td>
+      </tr>
+      <tr>
+        <td class="profile-cell F">Profile F<br><span style="font-weight:400;font-size:11px;color:var(--text-muted)">PANS / PANDAS</span></td>
+        <td><div class="matrix-cell-count">1</div><div class="matrix-cell-cases">Michael L (severe)</div></td>
+        <td><div class="matrix-cell-count">3</div><div class="matrix-cell-cases">Lachie, Michael S, Rhett</div></td>
+        <td><div class="matrix-cell-count">1</div><div class="matrix-cell-cases">Ellis (DBX-tier)</div></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:12px;color:var(--text-muted);font-style:italic">* Daryan currently classified Profile B based on prescription pattern; pending Dr. Kyle confirmation (could move to Profile F).</p>
+
+  <h2>What the empty cells reveal</h2>
+  <ul>
+    <li><strong>Profiles A, B, E never run LIGHT.</strong> Heavy reflex work, complex multi-pathway demands, and ABI rebuild work all require moderate-to-high dosing minimum. A family unable to sustain MID is a poor fit for the home model in these profiles.</li>
+    <li><strong>Profiles C, D, E never run HIGH.</strong> The neurological burden is light (C, D) or focal-targeted rather than diffuse (E). High device-and-exercise intensity isn't earned by the case.</li>
+    <li><strong>Profile F runs all three intensities</strong> — only profile that does. Severity gradient within PANS (severe → moderate → DBX-tier with flare module) maps directly onto HIGH/MID/LIGHT.</li>
+    <li><strong>Profile E concentrates entirely in MID.</strong> Empirically all 4 ABI cases run MID. Whether HIGH-intensity ABI cases exist outside the cohort is an open question for Dr. Kyle.</li>
+  </ul>
+
+  <div class="info-box">
+    <strong>The default assumption from this matrix:</strong> if you don't yet have a confirmed profile, MID intensity is the safe starting point. It fits 26 of 41 cases (63%) and is recoverable in either direction — escalate to HIGH if the case warrants, or pull back to LIGHT if family bandwidth requires.
+  </div>
+</section>
+
+<section class="section" id="signatures">
+  <div class="section-tag">§6 · Patterns · NEW</div>
+  <h1>Protocol signature elements</h1>
+  <p class="lead">Recurring sub-protocols that cross profile boundaries. These are not profile-specific — they're modular building blocks that get added or omitted based on case-specific needs. v0.3 formalizes them so they can be referenced by name in V1 prescription generation.</p>
+
+  <div class="sig-grid">
+
+    <div class="sig-card">
+      <div class="sig-card-mark">Element 1 · Cross-cutting</div>
+      <div class="sig-card-name">Vibration-Speech Pairing Matrix</div>
+      <div class="sig-card-desc">Maps cranial nerves V/VII/IX/X/XII to phoneme production with daily word lists and core sound sets (ka-ka-ka · la-la-la · ma-ma-ma). Daily speech work paired with vibration stimulation at relevant CN distribution. Not a Stage 4-5 add-on — it's now a first-class daily protocol element.</div>
+      <div class="sig-card-cases"><strong>Appears in:</strong> Anaya, Ellis, Jimmy W, Sysha, Ted, Michael S, Michael L (7 cases) · spans Profiles B, D, F</div>
+    </div>
+
+    <div class="sig-card">
+      <div class="sig-card-mark">Element 2 · Profile B/F</div>
+      <div class="sig-card-name">qEEG-Driven Cortical Targeting</div>
+      <div class="sig-card-desc">Laser placements at named EEG sites (F3/F4, F7/F8, T3/T4, T5/T6, P3/P4, O1/O2) per qEEG findings. Brainwave Enhancement (528 Hz / Solfeggio Mi) at hypoactive regions. Distinct from anatomical-only laser placement in Profile A/D — this is brainwave-guided.</div>
+      <div class="sig-card-cases"><strong>Appears in:</strong> Alexander (14 EEG-site references), Anaya (16), Daryan (6), Abdulrahman (5), Ellis · primarily Profile B and F</div>
+    </div>
+
+    <div class="sig-card">
+      <div class="sig-card-mark">Element 3 · Profile B/C/F</div>
+      <div class="sig-card-name">Anti-Inflammatory Hybrid Diet</div>
+      <div class="sig-card-desc">AIP / Paleo / Carnivore / Low-Histamine elimination. More aggressive than standard Paleo (Profile D modal). Multi-week reset structure. Histamine specifically targeted in dopamine-pathway-relevant cases. <strong>Strict 14-day Carnivore-Paleo reset</strong> in severe Profile F.</div>
+      <div class="sig-card-cases"><strong>Appears in:</strong> Daryan, Anaya, Ted, Michael L (heaviest), Lachie · primarily Profile B, F</div>
+    </div>
+
+    <div class="sig-card">
+      <div class="sig-card-mark">Element 4 · Profile F</div>
+      <div class="sig-card-name">Multi-Phase Structure (Reset → Detox → ESM)</div>
+      <div class="sig-card-desc">Phase 1: dietary reset (14 days). Phase 2: detox &amp; immune support (sauna + cryotherapy + rebounder + mycotoxin remediation). Phase 3: NeuroSolution ESM Homecare (the standard protocol). <strong>Sequencing matters</strong> — early-stage neurological work doesn't take in inflamed/dysregulated state.</div>
+      <div class="sig-card-cases"><strong>Appears in:</strong> Michael L (full 3-phase), Rhett (implied), Lachie (partial) · Profile F-specific</div>
+    </div>
+
+    <div class="sig-card">
+      <div class="sig-card-mark">Element 5 · Profile F</div>
+      <div class="sig-card-name">Detox Stack: Sauna + Cryotherapy + Rebounder</div>
+      <div class="sig-card-desc">Sauna 5×/week. Cryotherapy specifically right-side (contralateral activation for left frontal disinhibition typical of PANS). Rebounder for lymphatic drainage. First sauna routines in pediatric protocols appear here.</div>
+      <div class="sig-card-cases"><strong>Appears in:</strong> Ted, Michael L · Profile F primary, Profile B emerging</div>
+    </div>
+
+    <div class="sig-card">
+      <div class="sig-card-mark">Element 6 · Profile F</div>
+      <div class="sig-card-name">PEMF + Fisher Wallace Cranial E-Stim</div>
+      <div class="sig-card-desc">PEMF (NeoRhythm) headband for sleep / theta states. Fisher Wallace cranial electrostimulation for OCD/anxiety reduction. Different device class than standard NeuroSage laser+SaeboStim+Rezzimax stack. Suggests Profile F kit needs different device complement.</div>
+      <div class="sig-card-cases"><strong>Appears in:</strong> Lachie · also Arsalan adult ABI variant (out of cohort)</div>
+    </div>
+
+    <div class="sig-card">
+      <div class="sig-card-mark">Element 7 · Profile E</div>
+      <div class="sig-card-name">Separate Milestones Doc</div>
+      <div class="sig-card-desc">Goals/milestones tracked in a separate parent-facing document, distinct from the prescription. Likely because ABI progress is measured against pre-injury baseline (regaining function) rather than developmental norms (gaining function). Suggests Concierge call needs a "set milestones" deliverable for Profile E that other profiles don't require.</div>
+      <div class="sig-card-cases"><strong>Appears in:</strong> Hana, Lily · Profile E-specific</div>
+    </div>
+
+    <div class="sig-card">
+      <div class="sig-card-mark">Element 8 · Profile F</div>
+      <div class="sig-card-name">Rapid Regulation / Flare Protocol</div>
+      <div class="sig-card-desc">Explicit "Rapid Regulation Protocol for Stimming &amp; Outbursts" section appended to base prescription. Tells the family what to do when a flare hits — not a separate prescription, but an emergency module of the same one. Distinct from the standard daily protocol.</div>
+      <div class="sig-card-cases"><strong>Appears in:</strong> Ellis · Profile F-specific (likely should appear in all F cases)</div>
+    </div>
+
+  </div>
+
+  <div class="info-box">
+    <strong>Why these matter for V1:</strong> Each Signature Element should be a tagged, reusable protocol module in the GHL Custom Fields / V2 Hub prescription engine. When concierge classifies a case as Profile B, the engine pulls the standard Profile B template plus relevant Signature Elements (qEEG-driven targeting, anti-inflammatory hybrid diet, possibly vibration-speech pairing). The elements are how the framework stays modular without exploding into hundreds of profile sub-types.
+  </div>
+</section>
+
+<section class="section" id="longitudinal">
+  <div class="section-tag">§7 · Patterns · NEW</div>
+  <h1>Continuing care signals</h1>
+  <p class="lead">Five longitudinal pairs across the cohort give us the first empirical look at how protocols evolve over time. <strong>This is the seed corpus for whatever Continuing Care becomes.</strong> Out of scope for V1 prescription engine; in scope for v2 framework planning.</p>
+
+  <div class="longi-grid">
+
+    <div class="longi-card">
+      <div class="longi-name">Briar (= Brair)</div>
+      <div class="longi-pair">Aug 2023 → April 2025 · <strong>20 months</strong></div>
+      <span class="longi-prof" style="background:#fff7ed;color:var(--prof-e)">Profile E</span>
+      <p class="longi-delta">Longest time horizon in the cohort. Single patient with two prescriptions 20 months apart. Critical reference for understanding ABI long-arc progression.</p>
+    </div>
+
+    <div class="longi-card">
+      <div class="longi-name">Dana</div>
+      <div class="longi-pair">Aug 2023 → April 2024 · 8 months</div>
+      <span class="longi-prof" style="background:#fff7ed;color:var(--prof-e)">Profile E</span>
+      <p class="longi-delta">Second ABI longitudinal pair. 8-month evolution.</p>
+    </div>
+
+    <div class="longi-card">
+      <div class="longi-name">Lachie</div>
+      <div class="longi-pair">Initial → Update · estimated 6+ months</div>
+      <span class="longi-prof" style="background:#fff1f2;color:var(--prof-f)">Profile F</span>
+      <p class="longi-delta">Update adds explicit basal ganglia targeting ("right basal ganglia to reduce impulsivity"), explicit mycotoxin language. PANS protocol evolution toward more targeted D2-receptor work.</p>
+    </div>
+
+    <div class="longi-card">
+      <div class="longi-name">Aisha</div>
+      <div class="longi-pair">Initial → Update · approx 4-6 months</div>
+      <span class="longi-prof" style="background:#eff6ff;color:var(--prof-d)">Profile D</span>
+      <p class="longi-delta">86% of original prescription carries forward; 14% delta is the signal. Update adds gamma IR laser at right forehead/above right ear (impulse control), intranasal laser. Removes 2-week keto meal plan. Sign-off: "See you guys in October!"</p>
+    </div>
+
+    <div class="longi-card">
+      <div class="longi-name">Ted</div>
+      <div class="longi-pair">Initial → Updated Nov 2025</div>
+      <span class="longi-prof" style="background:#faf5ff;color:var(--prof-b)">Profile B</span>
+      <p class="longi-delta">Update adds sauna routine (5×/wk, 100°F, 10–20 min) — first sauna in pediatric protocols. Adds Benagene + Adrencalm supplements. Returning for "5-day NeuroSolution Intensive."</p>
+    </div>
+
+    <div class="longi-card">
+      <div class="longi-name">Rafeeah</div>
+      <div class="longi-pair">Initial → Updated · v0.2 cohort</div>
+      <span class="longi-prof" style="background:#f0fdf4;color:var(--prof-a)">Profile A</span>
+      <p class="longi-delta">From original cohort. Initial = HIGH intensity, Updated = MID intensity — example of intensity de-escalation as case progresses.</p>
+    </div>
+
+  </div>
+
+  <h2>What we learn from the pairs</h2>
+  <ul>
+    <li><strong>Profile E has the longest time horizons</strong> — Briar's 20-month pair and Dana's 8-month pair suggest ABI rehab arcs are measured in years, not weeks. Continuing Care for Profile E probably looks different than for other profiles.</li>
+    <li><strong>Updates preserve ~85% of original prescription</strong> — Aisha's 86% line overlap suggests the framework is roughly: keep the daily protocol stable, add or swap specific elements (laser placement, supplements, frequency setting). The protocol is more like a living document than a fresh prescription.</li>
+    <li><strong>Updates often add new technology</strong> — Aisha (gamma IR), Ted (sauna), Lachie (basal ganglia laser). Continuing Care may be how new tech gets introduced into existing protocols rather than via initial prescription.</li>
+    <li><strong>Intensity can de-escalate</strong> — Rafeeah HIGH → MID. Continuing Care may modally feature intensity reduction, not just protocol modification.</li>
+    <li><strong>Profile F updates sharpen targeting</strong> — Lachie update is more specific than initial. PANS evolution may be characterized by tightening from broad anti-inflammatory work to precise D2/basal ganglia targeting as flares resolve.</li>
+  </ul>
+
+  <div class="warn-box">
+    <strong>Out of scope for V1.</strong> The 12-week intensive prescription is what V1 ships. Continuing Care subscription and protocol-evolution logic is V2 territory. These signals are noted now so they don't get lost when Dr. Kyle's review happens — they belong in the same conversation as the v0.3 framework.
+  </div>
+</section>
+
+<section class="section" id="routing">
+  <div class="section-tag">§8 · Operations</div>
+  <h1>Discovery Call routing logic</h1>
+  <p class="lead">How concierge triages an inbound family during the intake call. Updated for 6-profile framework. Profile determination at this stage is provisional — Dr. Kyle confirms or revises during baseline. The brain exam and brainstem checklists (now in project knowledge) are the prospective instruments that drive this routing.</p>
+
+  <div class="flow-step">
+    <div class="flow-num">1</div>
+    <div class="flow-content">
+      <h4>Capture observable signals</h4>
+      <p>Concierge asks the parent (or watches a video intake):</p>
+      <ul>
+        <li>Did your child develop typically and then regress, or have these challenges been present from very early on? <em>(regressive vs. early-onset → routes toward C or F)</em></li>
+        <li>If regression — was it gradual (weeks/months) or sudden (days)? <em>(sudden → Profile F PANS, gradual → Profile C)</em></li>
+        <li>Was there an infection, illness, or trigger event before the onset/regression? <em>(yes → Profile F)</em></li>
+        <li>Is there a known structural insult — birth trauma, NICU, head injury, hypoxic event? <em>(yes → Profile E)</em></li>
+        <li>Does your child have GI symptoms, food sensitivities, mold exposure history, or known inflammatory conditions? <em>(yes → routes toward B, C, or F)</em></li>
+        <li>How does your child's posture and movement look? Are they hypotonic, asymmetric, often crawling or walking unusually? <em>(yes → routes toward A or B)</em></li>
+        <li>What was the most recent ATEC or screening tool score? <em>(severity proxy)</em></li>
+        <li>How much time per day can your family realistically commit to a home protocol? <em>(intensity capacity)</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">2</div>
+    <div class="flow-content">
+      <h4>Provisional profile classification</h4>
+      <ul>
+        <li><strong>Sudden onset + infection trigger + tics/OCD/regression → Profile F</strong> (immediate MD-led intake — flare protocol may be needed before standard intake)</li>
+        <li><strong>Known structural insult + focal deficits → Profile E</strong> (qEEG strongly recommended at intake; milestones doc deliverable required)</li>
+        <li><strong>Reflex signs + low biomed → Profile A</strong> (most common after Profile D)</li>
+        <li><strong>Reflex signs + high biomed + qEEG-able → Profile B</strong> (flag for MD-led intake)</li>
+        <li><strong>Gradual regressive history + mold/environmental drivers + few reflex signs → Profile C</strong></li>
+        <li><strong>Mild presentation, verbal, few reflex signs, low biomed → Profile D</strong> (modal)</li>
+        <li><strong>Ambiguous → default Profile D, MID intensity</strong>, escalate at baseline if Dr. Kyle reclassifies</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">3</div>
+    <div class="flow-content">
+      <h4>Provisional intensity band</h4>
+      <ul>
+        <li><strong>Profile A or B</strong> → start MID, plan to escalate to HIGH at week 2-3 if family executing well</li>
+        <li><strong>Profile C</strong> → start MID; biomedical pathway may run independently in the Continuing Care subscription</li>
+        <li><strong>Profile D</strong> → start MID, may reduce to LIGHT if family bandwidth dictates</li>
+        <li><strong>Profile E</strong> → start MID — empirically all 4 cohort cases run MID; HIGH possible if region rebuild requires</li>
+        <li><strong>Profile F</strong> → severity-driven: severe (multi-phase reset) HIGH, moderate MID, DBX-tier with flare module LIGHT</li>
+        <li><strong>Family-stated bandwidth low</strong> → start LIGHT regardless of profile, with explicit understanding the case may need to escalate later</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">4</div>
+    <div class="flow-content">
+      <h4>Pipeline assignment in GHL</h4>
+      <p>Capture provisional classification in GHL custom fields:</p>
+      <ul>
+        <li><code>profile_provisional</code> = A / B / C / D / E / F</li>
+        <li><code>intensity_provisional</code> = LIGHT / MID / HIGH</li>
+        <li><code>laterality_provisional</code> = RB-weak / LB-weak / mixed (default RB-weak unless contraindicated; Profile F often LB-frontal-weak — flag separately)</li>
+        <li><code>md_review_required</code> = true for Profile B, Profile E, Profile F, ambiguous, or family-flagged complex cases</li>
+        <li><code>signature_elements</code> = list of applicable Signature Element modules (vibration-speech pairing, qEEG-driven targeting, anti-inflammatory hybrid, multi-phase structure, detox stack, PEMF/Fisher-Wallace, milestones doc, flare protocol)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-num">5</div>
+    <div class="flow-content">
+      <h4>Dr. Kyle confirms or revises at baseline</h4>
+      <p>The provisional classification is the starting hypothesis. Dr. Kyle's first session — using the <strong>Brain Exam Checklist</strong> (intake instrument) — confirms profile, refines intensity, and locks in BRB laterality based on actual exam. Final classification populates the <code>profile_final</code>, <code>intensity_initial</code>, and <code>laterality_final</code> custom fields and unlocks the Active Treatment pipeline. The <strong>Brainstem Checklist</strong> (longitudinal instrument) is set up for parent/clinician tracking across the 12-week intensive.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="edge-cases">
+  <div class="section-tag">§9 · Operations</div>
+  <h1>Edge cases — the MD-led intake queue</h1>
+  <p class="lead">Roughly 20-25% of inbound families won't fit cleanly into the six profiles or will require MD-built prescriptions even when the profile is clear. These cases skip standard routing and go directly to MD-led intake.</p>
+
+  <h2>Triggers for MD-led intake</h2>
+  <div class="decision-list">
+    <div class="decision-item"><strong>Profile B (complex multi-pathway).</strong> By definition these cases need both pathways considered together. Provisional classification is fine; the prescription itself must be MD-built.</div>
+    <div class="decision-item"><strong>Profile E (Acquired Brain Injury).</strong> Regional targeting requires qEEG findings; milestones doc deliverable requires MD authorship. Cannot be templated.</div>
+    <div class="decision-item"><strong>Profile F (PANS/PANDAS) — all cases.</strong> Multi-phase structure, biomedical co-management with Dr. Jared, flare protocol, basal ganglia targeting. Coordination with biomedical workup required at intake. <strong>Severity assessment determines whether dietary reset Phase 1 is needed before Phase 3 ESM Homecare.</strong></div>
+    <div class="decision-item"><strong>Boundary cases between Profile B and F.</strong> Where presentation suggests qEEG-driven Profile B but biomedical/inflammation history suggests F. Daryan is the current example — pending Dr. Kyle disambiguation.</div>
+    <div class="decision-item"><strong>Significant comorbid medical issues.</strong> Seizures (though Duru is in Profile A as seizure stabilization variant), diagnosed mitochondrial disorder, genetic syndromes, recent significant medical events.</div>
+    <div class="decision-item"><strong>Severe / Level 3 / non-verbal presentation.</strong> The home model's outcomes scale with engagement; severely impaired children require higher clinician touch than the home model can deliver in V1. May be excluded from V1 pilot or directed to Immersive-only with extended timeline.</div>
+    <div class="decision-item"><strong>Adolescent or older patient.</strong> NeuroHome's V1 pediatric pilot focuses on ages 2–10. Older children/adolescents have different developmental priorities and family dynamics.</div>
+    <div class="decision-item"><strong>Family-flagged ambiguity.</strong> Concierge unable to confidently classify after intake. Better to MD-review than to start with the wrong profile.</div>
+    <div class="decision-item"><strong>International / co-managed cases.</strong> Dubai cohort co-managed with Dr. Manteghi (Alexander, Anaya). Different intake length (90 min vs 30) and concierge handoff. Operational pattern, not clinical, but routes through MD queue.</div>
+  </div>
+
+  <h2>What MD-led intake produces</h2>
+  <p>For these cases, Dr. Kyle (or the MD designee) reviews the case directly during a longer intake session (60–90 min vs. the standard 30-min concierge call). Output: same GHL custom fields populated, but with explicit MD-authored notes on what's atypical and why. These cases also trigger:</p>
+  <ul>
+    <li>Heightened concierge monitoring in weeks 1-2</li>
+    <li>Earlier mid-point review (week 4 instead of week 6)</li>
+    <li>Family-facing acknowledgment: "your case is more complex than our standard protocol — Dr. Kyle is personally building your prescription"</li>
+    <li>For Profile F: explicit flare-readiness counseling with the family at intake, plus the Rapid Regulation Protocol module bolted onto the standard prescription from day one</li>
+    <li>For Profile E: milestones-to-achieve document delivered alongside prescription; reassessment cadence aligned with rehab arc rather than 12-week developmental window</li>
+  </ul>
+</section>
+
+<section class="section" id="open-questions">
+  <div class="section-tag">§10 · Reference</div>
+  <h1>Open questions for Dr. Kyle</h1>
+  <p class="lead">Most of v0.2's open questions are resolved by the v0.3 cohort additions. Sequenced here: <span style="color:var(--success-ink);font-weight:600">resolved questions first (for context)</span>, then current open items requiring his input.</p>
+
+  <h2>Resolved since v0.2</h2>
+  <div class="decision-list">
+    <div class="decision-item resolved"><strong>✓ Profile E concrete definition.</strong> 4 cohort cases (Briar, Dana, Hana, Lily) populate the empirical signature. Targeted regional laser + separate milestones doc + MID-skewed intensity + long time horizons. Pediatric scope confirmed by current data.</div>
+    <div class="decision-item resolved"><strong>✓ Profile F concrete definition.</strong> 5 cohort cases populate. Basal ganglia / D2 explicit targeting, multi-phase structure, Dr. Jared co-management, mycotoxin awareness, sauna+cryotherapy+rebounder detox stack, PEMF + Fisher Wallace devices, anti-inflammatory hybrid diet, flare protocol module. Severity gradient maps to intensity bands.</div>
+    <div class="decision-item resolved"><strong>✓ qEEG required for Profile B.</strong> Yes — Alexander, Anaya, Daryan all arrive with qEEG reports that drive their prescriptions. qEEG is now confirmed Profile B input, not an open question.</div>
+    <div class="decision-item resolved"><strong>✓ Profile C reframing as Mold-Led.</strong> Confirmed in v0.2. No new Profile C cases this round, but framing holds.</div>
+  </div>
+
+  <h2>Currently open</h2>
+  <div class="decision-list">
+    <div class="decision-item"><strong>1. Daryan — Profile B or Profile F?</strong> His prescription pattern (qEEG-driven, Dr. Jared co-mgmt, AIP/Paleo/Carnivore/Low-Histamine, 419 lines) is closer to Profile F than the other Profile B cases. Confirm classification — outcome materially affects Profile F population and Profile B definition.</div>
+    <div class="decision-item"><strong>2. Profile E pediatric vs. adult scope for V1.</strong> All 4 cohort Profile E cases are pediatric. Your broader practice treats adult ABI (Neurological Rehab consultation transcripts confirm). Decision: V1 ships pediatric-only ABI, or includes adult parallel track? Affects kit composition, pricing, and intake routing.</div>
+    <div class="decision-item"><strong>3. Are HIGH-intensity Profile E cases possible?</strong> Empirically all 4 ABI cases run MID. Is this a real ceiling (regional rebuild work doesn't earn HIGH device count) or a sampling artifact?</div>
+    <div class="decision-item"><strong>4. Profile B vs F differential at intake — what's the most reliable signal?</strong> Both can present with qEEG-driven prescriptions and biomedical co-management. What does concierge ask to triage between them at the Discovery Call before sending to MD-led intake?</div>
+    <div class="decision-item"><strong>5. Jimmy W and Sysha classifications.</strong> Jimmy W has biomedical layer (Benagene + Adrencalm) suggesting Profile A or C. Sysha's protocol structure is lighter — likely D. Confirm.</div>
+    <div class="decision-item"><strong>6. Continuing Care: how do longitudinal pairs inform Continuing Care subscription pricing/structure?</strong> Briar's 20-month arc is a Profile E pattern; Aisha's 4-6 month update is a Profile D pattern. These suggest very different Continuing Care cadences. Out of V1 scope but worth flagging now.</div>
+    <div class="decision-item"><strong>7. Sign-off on Signature Elements.</strong> Are the 8 Protocol Signature Elements (§6) the right granularity? Should any be split, merged, or renamed before they're built into V1 prescription engine?</div>
+    <div class="decision-item"><strong>8. Severe Level 3 / non-verbal handling.</strong> Still not in cohort. Currently routed to MD-led intake as edge case. Confirm operational handling for V1.</div>
+    <div class="decision-item"><strong>9. The "Rapid Regulation Protocol" module in Ellis — should it appear in all Profile F prescriptions automatically?</strong> Currently only Ellis has it explicitly; severity-implied in others. Templatize as default Profile F module?</div>
+    <div class="decision-item"><strong>10. Profile A → Profile D graduation pattern.</strong> Same question as v0.2 — when reflex burden resolves, does the child transition into Profile D presentation? Does Continuing Care prescription change to reflect that?</div>
+  </div>
+</section>
+
+<section class="section" id="appendix">
+  <div class="section-tag">§11 · Reference</div>
+  <h1>Sources &amp; appendix</h1>
+
+  <h2>What this document is built from (v0.3)</h2>
+  <ul>
+    <li><strong>41 pediatric homecare prescriptions</strong> across the project files. Includes original 23 v0.2 cohort plus October-November 2025 batch (Abdulrahman, Alexander, Anaya, Daryan, Ellis, Jimmy W, Sasha, Sysha, Ted), plus older case backfills (Zorwara, Duru), plus Home Care folder additions classified as Profile E (Briar, Dana, Hana, Lily) and Profile F (Lachie, Michael L, Michael S, Rhett).</li>
+    <li><strong>Dr. Kyle's folder organization</strong> — used as diagnostic ground truth for Profiles E and F (PANDAS folder, ABI folder).</li>
+    <li><strong>Brain Exam Checklist + Brainstem Checklist</strong> — clinical assessment instruments now in project knowledge. Drive prospective profile assignment and longitudinal tracking.</li>
+    <li><strong>Home Protocol Architecture v0.5</strong> — defines the clinical model (Painting a Picture, BRB, Brain Development Flow Chart) the profiles map onto.</li>
+    <li><strong>Primitive Reflex Integration Coaching</strong> (Dr. Kyle, 68 slides) — the BRB laterality grid and per-reflex protocols.</li>
+    <li><strong>14 unique consultation transcripts</strong> (Archie, Brain Function Analysis, Brain Function Improvement Plan, Childhood Development, Child Health, Note_1531, etc.) — for Discovery Call SOP voice/pacing tuning.</li>
+    <li><strong>Sample qEEG report</strong> (821953) — concrete example of Profile B input.</li>
+  </ul>
+
+  <h2>Companion documents</h2>
+  <ul>
+    <li><strong>NeuroHome Kit Composition v0.3</strong> — kit-to-profile mapping (will need v0.4 update for Profile E and F kit specifics)</li>
+    <li><strong>NeuroHome Pricing Model v1.1</strong> — pricing structure</li>
+    <li><strong>NeuroHome Profile Framework for Kyle</strong> — sign-off version (will be regenerated from v0.3)</li>
+    <li><strong>NeuroHome Discovery Call SOP</strong> — V1 entry point</li>
+    <li><strong>Home Protocol Architecture v0.5</strong> — clinical model</li>
+    <li><strong>NeuroSage Hub Clinical Algorithm</strong> + <strong>Diagnostic Flowchart</strong> — decision logic underpinning</li>
+    <li>Pending: <strong>Continuing Care framework v0.1</strong> — informed by the longitudinal pairs in §7</li>
+  </ul>
+
+  <h2>Out of scope for v0.3</h2>
+  <ul>
+    <li>Continuing Care subscription patterns (post-week-12) — flagged in §7 as future work</li>
+    <li>Adult ABI pathway — Profile E currently pediatric-only; decision pending</li>
+    <li>Severity calibration (Level 1 / 2 / 3) — still not reliably extractable from existing files; should be captured at intake via Brain Exam Checklist</li>
+    <li>Adolescent/teen pathway — out of pediatric V1 scope</li>
+    <li>Profile B/F kit composition specifics — Kit Composition v0.3 covers A/C/D; needs E/F update</li>
+  </ul>
+
+  <h2>Project knowledge cleanup status</h2>
+  <ul>
+    <li>4 hard duplicates flagged for deletion in prior audit (PBM_and_Protocol/small_torch, Hub_Model, NCM, dotrine_V2)</li>
+    <li>8 byte-identical otter.ai duplicate copies flagged for deletion</li>
+    <li>Abhishek_Malkani_basic.docx flagged as 90% subset of Abdulrahman — pending project-side cleanup</li>
+    <li>Recommended split into pilot project vs. education project still pending execution</li>
+  </ul>
+
+  <h2>Version history</h2>
+  <p style="font-size:13px;color:var(--text-muted)"><strong>v0.3 — current.</strong> Updated May 6. Cohort expanded to 41 cases. Profile E populated empirically (4 patients, 9 files). Profile F populated empirically (5 patients, 6 files). Profile B sharpened with 3 new cases. Added §6 Protocol Signature Elements (8 cross-cutting modules). Added §7 Continuing Care Signals (5 longitudinal pairs). Routing extended for 6 profiles. Two cases pending classification (Daryan, Jimmy W).</p>
+  <p style="font-size:13px;color:var(--text-muted)"><strong>v0.2.</strong> Updated May 2 after Dr. Kyle review. Confirmed 4 cohort profiles. Added Profile E (Acquired Brain Injury) and Profile F (PANS/PANDAS) as TBD placeholders. Reframed Profile C as Mold-Led specifically. Universal labs confirmed as Stool (Gut Zoomer) + OAT.</p>
+  <p style="font-size:13px;color:var(--text-muted)"><strong>v0.1.</strong> Initial draft. 23 cohort cases analyzed. 4 clinical profiles + 3 intensity bands derived from data.</p>
+</section>
+
+</main>
+</div>
+
+<script>
+const sections = document.querySelectorAll('main section[id]');
+const navLinks = document.querySelectorAll('.sidenav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
