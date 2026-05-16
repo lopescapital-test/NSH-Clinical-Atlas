@@ -299,7 +299,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
     <div class="breakdown-grid">
       <div class="breakdown-row"><div class="breakdown-label">Primary bucket</div><div class="breakdown-content">One of the 8 etiology-by-severity profiles. The anchor for prescription template, kit SKU, price point.</div></div>
       <div class="breakdown-row"><div class="breakdown-label">Severity score</div><div class="breakdown-content">2 / 3 / 4 / 5 / 6 / 7 / 8 / 10. The bucket's anchor. No 9/10 bucket exists in the schema (intentional or oversight — open question).</div></div>
-      <div class="breakdown-row"><div class="breakdown-label">Comorbidity flags</div><div class="breakdown-content">Modifier overlays that drive sub-module additions within the primary template. <strong>Decision 2:</strong> single primary bucket + flags, not multi-tag. Daryan is the validation case (Hyperimmune + 4 flags).</div></div>
+      <div class="breakdown-row"><div class="breakdown-label">Comorbidity flags</div><div class="breakdown-content">Modifier overlays that drive sub-module additions within the primary template. <strong>Decision 2:</strong> single primary bucket + flags, not multi-tag. Case H-02 is the validation case (Hyperimmune + 4 flags).</div></div>
       <div class="breakdown-row"><div class="breakdown-label">Intensity band</div><div class="breakdown-content"><strong>LIGHT</strong> (20–35 min/day, 4–8 exercises) · <strong>MID</strong> (40–60 min, 10–15 exercises, <em>modal</em>) · <strong>HIGH</strong> (60–90 min, 15–22 exercises). Independent of profile. MID is the safe default.</div></div>
       <div class="breakdown-row"><div class="breakdown-label">Laterality</div><div class="breakdown-content"><strong>RB-weak</strong> modal ~91% · <strong>LB-weak</strong> ~5–8% formalized (Chloe, Corey, Jacob) · mixed/bilateral common in Hyperimmune and Severe Dysreg.</div></div>
       <div class="breakdown-row"><div class="breakdown-label">Confidence</div><div class="breakdown-content">High · moderate · low on the assignment. Lower confidence triggers MD-led intake escalation.</div></div>
@@ -353,8 +353,8 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
   <div class="content-section sub-section">
     <h2 class="section-title">Framework decisions</h2>
     <div class="decisions">
-      <div class="decision-row"><div class="decision-num">D1</div><div class="decision-text"><strong>Cortical-imbalance gap.</strong> Force-fit to Foundational + cortical-imbalance flag, intensity-band HIGH. 3/5 confirmed (Maya, Anaya, Alexander Gabriel). Q1 to Kyle: 9th bucket or sub-band?</div><div class="decision-status open">Open · Q1</div></div>
-      <div class="decision-row"><div class="decision-num">D2</div><div class="decision-text"><strong>Multi-etiology cases.</strong> Single primary bucket + comorbidity flags. Not multi-tag. Daryan validates operationally (Hyperimmune + Mycotoxin + Metabolic + Sensory-Motor + Lunar-cycle seizure).</div><div class="decision-status committed">Committed</div></div>
+      <div class="decision-row"><div class="decision-num">D1</div><div class="decision-text"><strong>Cortical-imbalance gap.</strong> Force-fit to Foundational + cortical-imbalance flag, intensity-band HIGH. 3/5 confirmed (Case CI-01, Case CI-02, Case CI-03). Q1 to Kyle: 9th bucket or sub-band?</div><div class="decision-status open">Open · Q1</div></div>
+      <div class="decision-row"><div class="decision-num">D2</div><div class="decision-text"><strong>Multi-etiology cases.</strong> Single primary bucket + comorbidity flags. Not multi-tag. Case H-02 validates operationally (Hyperimmune + Mycotoxin + Metabolic + Sensory-Motor + Lunar-cycle seizure).</div><div class="decision-status committed">Committed</div></div>
       <div class="decision-row"><div class="decision-num">D3</div><div class="decision-text"><strong>Metabolic bucket scope.</strong> Deferred pending business decision (Q7). 0 cohort cases — likely audience exists in clinic but didn't enter NeuroHome funnel.</div><div class="decision-status open">Pending · Q7</div></div>
       <div class="decision-row"><div class="decision-num">D4</div><div class="decision-text"><strong>Cohort scope.</strong> Pediatric ASD / developmental, age 3–12 only. Adult cognitive decline, adult neurorehab, adolescent ASD without pediatric framing, pure metabolic non-ASD all out of scope.</div><div class="decision-status resolved">Resolved</div></div>
     </div>
@@ -364,8 +364,8 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
     <h2 class="section-title">Mid-cohort reclassification</h2>
     <p>Patients sometimes shift buckets as new data arrives. v0.3 set the precedent with two cases:</p>
     <ul class="atlas-list">
-      <li><strong>Aisha</strong> · Foundational 2/10 → Hyperimmune 7/10. Updated workup revealed immune drivers the original presentation underplayed.</li>
-      <li><strong>Matteo</strong> · Profile B gap pending → Hyperimmune 7/10. Reclassified out of cortical-imbalance subset on prescription pattern review.</li>
+      <li><strong>Case H-06</strong> · Foundational 2/10 → Hyperimmune 7/10. Updated workup revealed immune drivers the original presentation underplayed.</li>
+      <li><strong>Case H-07</strong> · Profile B gap pending → Hyperimmune 7/10. Reclassified out of cortical-imbalance subset on prescription pattern review.</li>
     </ul>
     <p>Operational rule (provisional, pending Q6 with Dr. Kyle):</p>
     <ul class="atlas-list">
@@ -398,7 +398,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
     </ul>
 
     <h3 class="sub-title">Continuing Care · v2 territory</h3>
-    <p>The 12-week plans in this atlas are the <strong>v1 intensive prescription</strong> — what families execute during their first treatment cycle. Continuing Care (the post-12-week, multi-year arc) is v2 framework work. Longitudinal evidence from the cohort (Briar's 20-month arc, Lachie's mycotoxin-dopamine update, Aisha's 4–6 month update pattern) suggests Continuing Care preserves ~85% of the original prescription, adds new technology (sauna, gamma IR, basal ganglia laser), and may de-escalate intensity. <em>Out of scope for this v1.0 atlas; flagged for v2.</em></p>
+    <p>The 12-week plans in this atlas are the <strong>v1 intensive prescription</strong> — what families execute during their first treatment cycle. Continuing Care (the post-12-week, multi-year arc) is v2 framework work. Longitudinal evidence from the cohort (Case PD-01's 20-month arc, Case E-01's mycotoxin-dopamine update, Case H-06's 4–6 month update pattern) suggests Continuing Care preserves ~85% of the original prescription, adds new technology (sauna, gamma IR, basal ganglia laser), and may de-escalate intensity. <em>Out of scope for this v1.0 atlas; flagged for v2.</em></p>
   </div>
 
   <div class="callout callout-info">
@@ -408,7 +408,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
 
   <div class="callout callout-warn">
     <div class="callout-label">Important caveat · plan generation</div>
-    <p>The 12-week plans in this atlas are <strong>synthesized from Kyle's prescription patterns across the cohort</strong> — universal kernels + 8 Protocol Signature Elements + patterns from individual homecare plans (Daryan, Shivay, Michael L., Lachie, Croatia cohort, etc.). They are <strong>not plans Kyle authored as templates</strong>. The structure reflects his practice; the specific reps, settings, durations, and checkpoint criteria were generalized from individual patient prescriptions and require <strong>Dr. Kyle's review and confirmation</strong> before use as canonical templates. Treat as <em>v1.0 reference framework awaiting clinical sign-off</em>, not final operational standard. Several framework questions also remain open (Q1 cortical-imbalance bucket status, Q2 Birth Trauma naming, Q5 Lucas / Clara classification, Q7 Metabolic scope, Q9 Rapid Regulation default for Hyperimmune) — answers from Dr. Kyle may shift tabs, headings, or default modules.</p>
+    <p>The 12-week plans in this atlas are <strong>synthesized from Kyle's prescription patterns across the cohort</strong> — universal kernels + 8 Protocol Signature Elements + patterns from individual homecare plans (Case H-02, Case AR-01, Case H-01., Case E-01, Croatia cohort, etc.). They are <strong>not plans Kyle authored as templates</strong>. The structure reflects his practice; the specific reps, settings, durations, and checkpoint criteria were generalized from individual patient prescriptions and require <strong>Dr. Kyle's review and confirmation</strong> before use as canonical templates. Treat as <em>v1.0 reference framework awaiting clinical sign-off</em>, not final operational standard. Several framework questions also remain open (Q1 cortical-imbalance bucket status, Q2 Birth Trauma naming, Q5 Case BT-01 / Case BT-02 classification, Q7 Metabolic scope, Q9 Rapid Regulation default for Hyperimmune) — answers from Dr. Kyle may shift tabs, headings, or default modules.</p>
   </div>
 </section>
 
@@ -514,7 +514,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
     </div>
 
     <div class="ref-plans">
-      <strong>Reference plans in project base:</strong> Croatia cohort (Ema, Grga, Jakov, Mara, Marin, Sofija, Tin, Vid, Zita) — checklist template Kyle marks per patient. Zorwara home care January 2023.
+      <strong>Reference plans in project base:</strong> Croatia cohort (9 reference patients) — checklist template Kyle marks per patient. January 2023 home care archive (reference).
     </div>
   </div>
 
@@ -522,7 +522,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
     <h2 class="section-title">Cortical-imbalance subset · 3 of 16</h2>
     <div class="callout callout-flag">
       <div class="callout-label">Subset within Foundational · pending Q1 to Kyle</div>
-      <p><strong>3 cohort patients</strong> — Maya, Anaya, Alexander Gabriel — present as right-hemisphere weak chronic cortical dysregulation with no triggers, no PANS markers, no environmental drivers, but textbook qEEG findings (F4 / F8 / T4 / P4 alpha+beta deficits, reduced occipital alpha peak, right DMN hypo-coherence, left frontal/temporal beta compensatory over-drive). They require <strong>HIGH intensity</strong> protocols despite the 2/10 etiology label.</p>
+      <p><strong>3 cohort patients</strong> — Case CI-01, Case CI-02, Case CI-03 — present as right-hemisphere weak chronic cortical dysregulation with no triggers, no PANS markers, no environmental drivers, but textbook qEEG findings (F4 / F8 / T4 / P4 alpha+beta deficits, reduced occipital alpha peak, right DMN hypo-coherence, left frontal/temporal beta compensatory over-drive). They require <strong>HIGH intensity</strong> protocols despite the 2/10 etiology label.</p>
     </div>
     <p>This subset operates by the Foundational template above with three Protocol Signature Elements layered in:</p>
     <ul class="atlas-list">
@@ -636,7 +636,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
     </div>
 
     <div class="ref-plans">
-      <strong>Reference plans in project base:</strong> Abdulrahman (initial HC + morning routine), Beau Bergeron (initial), Averie Bergeron (initial), Yousef (1-wk intensive discharge confirming clean Profile A signature), Sasha (initial with lasers), Duru (initial phase), Rafeeah (initial + Jun25 longitudinal pair showing HIGH → MID de-escalation).
+      <strong>Reference plans in project base:</strong> Case SM-01 (initial HC + morning routine), Case SM-02 (initial), Case SM-03 (initial), Case SM-04 (1-wk intensive discharge confirming clean Profile A signature), Case SM-05 (initial with lasers), Case SM-06 (initial phase), Case SM-07 (initial + Jun25 longitudinal pair showing HIGH → MID de-escalation).
     </div>
   </div>
 </section>
@@ -659,7 +659,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
 
   <div class="callout callout-warn">
     <div class="callout-label">Naming &amp; scope question · Q2 pending</div>
-    <p>Lucas (PCH Type 2) and Clara (PTCD) are genetic-congenital brainstem disorders, not perinatal trauma. They fit the etiology but not the name. Open options: rename to <strong>"Structural / Acquired Neurological"</strong>, carve out <strong>"Congenital Structural"</strong> sub-bucket, or keep the bucket narrow and create a separate genetic-structural track. Q5 also pending — Lucas and Clara may reclassify to Severe Dysreg 10/10 by clinical presentation.</p>
+    <p>Case BT-01 (PCH Type 2) and Case BT-02 (PTCD) are genetic-congenital brainstem disorders, not perinatal trauma. They fit the etiology but not the name. Open options: rename to <strong>"Structural / Acquired Neurological"</strong>, carve out <strong>"Congenital Structural"</strong> sub-bucket, or keep the bucket narrow and create a separate genetic-structural track. Q5 also pending — Case BT-01 and Case BT-02 may reclassify to Severe Dysreg 10/10 by clinical presentation.</p>
   </div>
 
   <div class="content-section">
@@ -685,7 +685,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
     <h2 class="section-title">12-week treatment plan</h2>
     <div class="plan-intro b4">
       <div class="plan-intro-label">Approach</div>
-      <div class="plan-intro-text">Block-based at MID intensity. <strong>qEEG-driven targeting</strong> is foundational. Cranial nerve activation is the primary Stage 1 focus. Separate "milestones to achieve" parent-facing document accompanies the prescription. Long time horizons — Briar's 20-month longitudinal arc is the cohort precedent.</div>
+      <div class="plan-intro-text">Block-based at MID intensity. <strong>qEEG-driven targeting</strong> is foundational. Cranial nerve activation is the primary Stage 1 focus. Separate "milestones to achieve" parent-facing document accompanies the prescription. Long time horizons — Case PD-01's 20-month longitudinal arc is the cohort precedent.</div>
     </div>
 
     <div class="plan-blocks">
@@ -748,7 +748,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
     </div>
 
     <div class="ref-plans">
-      <strong>Reference plans in project base:</strong> Hana (initial homecare + milestones to achieve + checklist — most complete example), Lily (NSDBX homecare updated Oct25 + milestones to achieve), Briar (Aug23 + April25 longitudinal pair — 20-month arc, cohort precedent), Dana (Aug23 + April24 longitudinal pair). Pending reclass for Lucas and Clara (Q5).
+      <strong>Reference plans in project base:</strong> Case PD-02 (initial homecare + milestones to achieve + checklist — most complete example), Case PD-03 (NSDBX homecare updated Oct25 + milestones to achieve), Case PD-01 (Aug23 + April25 longitudinal pair — 20-month arc, cohort precedent), Case PD-04 (Aug23 + April24 longitudinal pair). Pending reclass for Case BT-01 and Case BT-02 (Q5).
     </div>
   </div>
 </section>
@@ -883,7 +883,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
 
   <div class="content-section">
     <h2 class="section-title">What this profile is</h2>
-    <p>The Environmental child has neurological dysregulation tied to chronic toxic exposure — mold and mycotoxins primarily, sometimes heavy metals or chemical sensitivity. Unlike Hyperimmune, there is no acute flare structure, no autoimmune antibodies driving symptoms, and no episodic waxing/waning pattern. This is a <em>chronic burden</em> picture: brain fog, fatigue, sensory overload, behavioral dysregulation that worsens indoors or in specific environments. <strong>Dopamine pathway involvement</strong> is common — Lachie's mycotoxin-dopamine longitudinal arc is the cohort exemplar. Brooks and William have been saved by Kyle as reusable reference templates for "mold + developmental delay + reflexes" — a formally recognized prototype class.</p>
+    <p>The Environmental child has neurological dysregulation tied to chronic toxic exposure — mold and mycotoxins primarily, sometimes heavy metals or chemical sensitivity. Unlike Hyperimmune, there is no acute flare structure, no autoimmune antibodies driving symptoms, and no episodic waxing/waning pattern. This is a <em>chronic burden</em> picture: brain fog, fatigue, sensory overload, behavioral dysregulation that worsens indoors or in specific environments. <strong>Dopamine pathway involvement</strong> is common — Case E-01's mycotoxin-dopamine longitudinal arc is the cohort exemplar. Case E-02 and Case E-03 have been saved by Kyle as reusable reference templates for "mold + developmental delay + reflexes" — a formally recognized prototype class.</p>
     <p>For parents: <em>"Your child's nervous system is reacting to something in their environment — most likely mycotoxins from mold exposure. The brain is in a state of chronic low-grade inflammation. We can do neurological work all day, but if the environmental exposure continues, it's like trying to fill a bucket with a hole in the bottom. The first job is reducing the exposure. Then we support detoxification. Then we layer in the neurological rebuild."</em></p>
   </div>
 
@@ -891,7 +891,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
     <h2 class="section-title">What causes it · clinical breakdown</h2>
     <div class="breakdown-grid">
       <div class="breakdown-row"><div class="breakdown-label">Dominant features</div><div class="breakdown-content">Brain fog · fatigue · sensory overload · sleep issues · behavioral dysregulation · symptoms worsen in specific environments</div></div>
-      <div class="breakdown-row"><div class="breakdown-label">Neurological</div><div class="breakdown-content">Neuroinflammation · limbic overactivation · autonomic dysregulation · poor stress tolerance · dopamine pathway disruption (key Lachie pattern) · cranial nerve weakness common (Jonte exemplar)</div></div>
+      <div class="breakdown-row"><div class="breakdown-label">Neurological</div><div class="breakdown-content">Neuroinflammation · limbic overactivation · autonomic dysregulation · poor stress tolerance · dopamine pathway disruption (key Case E-01 pattern) · cranial nerve weakness common (Case E-04 exemplar)</div></div>
       <div class="breakdown-row"><div class="breakdown-label">Systemic</div><div class="breakdown-content">Mold exposure history · mycotoxin burden (ochratoxin A, trichothecenes, aflatoxins) · chemical sensitivity · poor detoxification (GSTM1, SOD2 polymorphisms) · chronic inflammatory activation</div></div>
       <div class="breakdown-row"><div class="breakdown-label">Behavioral</div><div class="breakdown-content">Irritability · emotional instability · anxiety · aggression · sensory defensiveness · symptoms track environment more than triggers</div></div>
       <div class="breakdown-row"><div class="breakdown-label">Historical clues</div><div class="breakdown-content">Water-damaged home · symptoms worsen indoors · family illness clusters · chronic sinus issues · prior antibiotic / antifungal courses · "we moved and got worse"</div></div>
@@ -904,7 +904,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
     <h2 class="section-title">12-week treatment plan</h2>
     <div class="plan-intro b6">
       <div class="plan-intro-label">Approach</div>
-      <div class="plan-intro-text">Block-based at MID intensity. <strong>Environmental remediation comes FIRST</strong> — no neurological progress is possible while exposure continues. Detox stack builds in Block 2 once exposure reduced. Neurological work expands in Block 3 once toxic load reducing. Mold-led framing. Lachie's pattern is the longitudinal exemplar.</div>
+      <div class="plan-intro-text">Block-based at MID intensity. <strong>Environmental remediation comes FIRST</strong> — no neurological progress is possible while exposure continues. Detox stack builds in Block 2 once exposure reduced. Neurological work expands in Block 3 once toxic load reducing. Mold-led framing. Case E-01's pattern is the longitudinal exemplar.</div>
     </div>
 
     <div class="plan-blocks">
@@ -953,9 +953,9 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
         </div>
         <div class="plan-modules">
           <div class="plan-module"><div class="plan-module-name">Full neurological protocol</div><div class="plan-module-detail">Reflex integration complete. Vestibular sequencing (VOR, otolith, single-leg). Eye work expansion (saccades, pursuits, convergence, optodrum). Cross-pattern coordination. Postural strengthening (YTAs, rows, knee extensions).</div></div>
-          <div class="plan-module"><div class="plan-module-name">Dopamine pathway support (Lachie pattern)</div><div class="plan-module-detail">If mycotoxin-dopamine pattern: basal ganglia laser targeting added. Tyrosine and methylation cofactors per labs. Movement-based dopamine work (jumping, rhythmic exercise).</div></div>
+          <div class="plan-module"><div class="plan-module-name">Dopamine pathway support (Case E-01 pattern)</div><div class="plan-module-detail">If mycotoxin-dopamine pattern: basal ganglia laser targeting added. Tyrosine and methylation cofactors per labs. Movement-based dopamine work (jumping, rhythmic exercise).</div></div>
           <div class="plan-module"><div class="plan-module-name">Continued environmental vigilance</div><div class="plan-module-detail">Maintain air purifiers, humidity control, diet. Sauna 2–3×/week maintenance. Avoid known trigger environments (damp homes, certain hotels, etc.).</div></div>
-          <div class="plan-module"><div class="plan-module-name">Speech / cognitive work</div><div class="plan-module-detail">If brain fog resolved, age-appropriate cognitive demand returns. Vibration-speech pairing if speech delay (Jonte pattern with cranial nerve weakness).</div></div>
+          <div class="plan-module"><div class="plan-module-name">Speech / cognitive work</div><div class="plan-module-detail">If brain fog resolved, age-appropriate cognitive demand returns. Vibration-speech pairing if speech delay (Case E-04 pattern with cranial nerve weakness).</div></div>
           <div class="plan-module"><div class="plan-module-name">Sleep protocol</div><div class="plan-module-detail">PEMF (NeoRhythm) bedtime setting. NeuroSolution laser sleep setting. No screens after sundown. Magnesium glycinate evening. Circadian rhythm reinforced.</div></div>
           <div class="plan-module"><div class="plan-module-name">Re-assessment + intensive plan</div><div class="plan-module-detail">Full re-assessment (reflexes, vestibular, eye tracking, cognitive). Re-test mycotoxin to confirm clearance. Schedule next NeuroSolution Intensive 3 months out for advanced regional work.</div></div>
         </div>
@@ -967,7 +967,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
     </div>
 
     <div class="ref-plans">
-      <strong>Reference plans in project base:</strong> Lachie (Home Care Program initial + Updated Program — mycotoxin-dopamine longitudinal pair, cohort founding case), Brooks (reusable template archetype — mold + developmental delay + reflexes), William (reusable template), Jonte (Australia cluster — ochratoxin A primary, cranial nerve focus, retained reflexes), Derin (3-scan longitudinal initial → 1-wk → 3-wk, deepest data in cohort).
+      <strong>Reference plans in project base:</strong> Case E-01 (Home Care Program initial + Updated Program — mycotoxin-dopamine longitudinal pair, cohort founding case), Case E-02 (reusable template archetype — mold + developmental delay + reflexes), Case E-03 (reusable template), Case E-04 (Australia cluster — ochratoxin A primary, cranial nerve focus, retained reflexes), Case E-05 (3-scan longitudinal initial → 1-wk → 3-wk, deepest data in cohort).
     </div>
   </div>
 </section>
@@ -1075,11 +1075,11 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
 
     <div class="callout callout-flag">
       <div class="callout-label">Severity gradient within Hyperimmune</div>
-      <p><strong>HIGH:</strong> Michael L (severe — full 3-phase reset, 90-day NeuroSolution Reset Protocol). <strong>MID-HIGH:</strong> Daryan (boundary case, 5 etiology flags, 419-line prescription). <strong>MID:</strong> Lachie (moderate-high, crosses into Environmental), Rhett, Michael S, Ted, Aisha (reclass), Matteo K (reclass). <strong>LIGHT:</strong> Ellis (DBX-tier with flare module). Severity gradient maps directly onto intensity bands. Only profile that runs all three.</p>
+      <p><strong>HIGH:</strong> Case H-01 (severe — full 3-phase reset, 90-day NeuroSolution Reset Protocol). <strong>MID-HIGH:</strong> Case H-02 (boundary case, 5 etiology flags, 419-line prescription). <strong>MID:</strong> Case E-01 (moderate-high, crosses into Environmental), Case H-03, Case H-04, Case H-05, Case H-06 (reclass), Case H-07 (reclass). <strong>LIGHT:</strong> Case H-08 (DBX-tier with flare module). Severity gradient maps directly onto intensity bands. Only profile that runs all three.</p>
     </div>
 
     <div class="ref-plans">
-      <strong>Reference plans in project base:</strong> Daryan (multiple — Initial HC, Updated Plan, Revised Treatment Plan, Progress Report April 2026, Followup Consultation — <em>the most detailed prescription in the cohort</em>, 419 lines, 5 etiology flags including lunar-cycle seizure modifier). Michael L (90-day NeuroSolution Reset Protocol — clearest 3-phase exemplar). Michael S. Rhett (Aug25). Ted (updated DBX Nov25 with sauna addition). Ellis (DBX Oct25 with explicit Rapid Regulation Protocol). Aisha (initial + updates — reclassified from Foundational). Matteo K (initial homecare — reclassified from Profile B gap).
+      <strong>Reference plans in project base:</strong> Case H-02 (multiple — Initial HC, Updated Plan, Revised Treatment Plan, Progress Report April 2026, Followup Consultation — <em>the most detailed prescription in the cohort</em>, 419 lines, 5 etiology flags including lunar-cycle seizure modifier). Case H-01 (90-day NeuroSolution Reset Protocol — clearest 3-phase exemplar). Case H-04. Case H-03 (Aug25). Case H-05 (updated DBX Nov25 with sauna addition). Case H-08 (DBX Oct25 with explicit Rapid Regulation Protocol). Case H-06 (initial + updates — reclassified from Foundational). Case H-07 (initial homecare — reclassified from Profile B gap).
     </div>
   </div>
 </section>
@@ -1186,7 +1186,7 @@ ul.atlas-list li strong { color: var(--ink); font-weight: 600; }
     </div>
 
     <div class="ref-plans">
-      <strong>Reference plans in project base:</strong> Shivay (Initial Homecare July25 — <em>phased journey narrative + Williams &amp; Shellenberger Pyramid reference, 2–4 year vision, exemplar of long-arc framing</em>). Nektarije (homecare March24 — Paleo emphasis, Dr. Seigler consult, basic reflex template). Ameer (initial HC). Jeremiah (initial — LIGHT intensity, biomedical happening offline). Jimmy W (Initial DBX Oct25 — full PBM checklist with ENVIRONMENT / MYCOTOXIN SUPPORT section, Dr. Brandon Brock or Dr. Jared Siegler co-management 2–4 wk tele-review cadence).
+      <strong>Reference plans in project base:</strong> Case AR-01 (Initial Homecare July25 — <em>phased journey narrative + Williams &amp; Shellenberger Pyramid reference, 2–4 year vision, exemplar of long-arc framing</em>). Case AR-02 (homecare March24 — Paleo emphasis, Dr. Seigler consult, basic reflex template). Case AR-03 (initial HC). Case AR-04 (initial — LIGHT intensity, biomedical happening offline). Case AR-05 (Initial DBX Oct25 — full PBM checklist with ENVIRONMENT / MYCOTOXIN SUPPORT section, Dr. Brandon Brock or Dr. Jared Siegler co-management 2–4 wk tele-review cadence).
     </div>
   </div>
 </section>
